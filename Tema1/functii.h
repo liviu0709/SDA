@@ -10,10 +10,22 @@ typedef struct celula
   struct celula *prev;
 } TCelula, *TLista;
 
+typedef struct celulaStr
+{ 
+  char *info;
+  struct celulaStr* urm;
+  struct celulaStr *prev;
+} TCelula2, *TLista2;
+
 typedef struct coada
 { 
   TLista sf, inc;
 } TCoada;
+
+typedef struct coada2
+{ 
+  TLista2 sf, inc;
+} TCoada2;
 
 typedef struct tren
 {
@@ -40,3 +52,12 @@ void distrTren(Tren**);
 void clearAll(Tren**);
 void insertRight(Tren*, char);
 void insertLeft(Tren*, char, FILE*);
+void search(Tren*, char*, FILE*);
+
+TLista2 alocCelStr(char*);
+int IntrQStr(TCoada2*, char*);
+void afisQStr(TCoada2*);
+void DistrQStr(TCoada2**);
+char* ExtrQStr(TCoada2*);
+TCoada2* InitQStr();
+void swapCoada2(TCoada2*);
