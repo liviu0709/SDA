@@ -4,9 +4,9 @@
 #include <string.h>
 #include "functii.h"
 
-void executare(TCoada *c, Tren **t, FILE *out, TCoada *caractere) {
+void executare(TCoada *c, Tren **t, FILE *out, TCoada *caractere, TCoada2 *cuvinte) {
     char comanda_curenta = ExtrQ(c);
-    printf("Comanda curenta: %c\n", comanda_curenta);
+    // printf("Comanda curenta: %c\n", comanda_curenta);
     if ( comanda_curenta == '0' ) {
         moveLeft(*t);
     } else if ( comanda_curenta == '1' ) {
@@ -25,6 +25,11 @@ void executare(TCoada *c, Tren **t, FILE *out, TCoada *caractere) {
     } else if ( comanda_curenta == '6' ) {
         char cc = ExtrQ(caractere);
         insertLeft(*t, cc, out);
+    } else if ( comanda_curenta == '7' ) {
+        char *s = ExtrQStr(cuvinte);
+        printf("Cuvantul citit: %s\n", s);
+        search(*t, s, out);
+        free(s);
     }
 }
 
@@ -39,12 +44,14 @@ int main(void) {
     // Coada de comenzi
     TCoada *c = InitQ();
     TCoada *caractere = InitQ();
+    TCoada2 *cuvinte = InitQStr();
     int nrComenzi;
     fscanf(f, "%d", &nrComenzi);
+    char *linie = malloc(100 * sizeof(char));
     for ( int i = 0 ; i < nrComenzi ; i++ ) {
-        char *linie = malloc(100 * sizeof(char));
+        
         fscanf(f, "%s", linie);
-        printf("Linie: %s\n", linie);
+        // printf("Linie: %s\n", linie);
         // afisTren(t, stdout);
         // afisQ(c);
         if ( strcmp(linie, "MOVE_LEFT") == 0 ) { // MOVE_LEFT = 0
@@ -72,8 +79,8 @@ int main(void) {
             fscanf(f, " %c", &cc);
             IntrQ(caractere, cc);
         } else if ( strcmp(linie, "EXECUTE") == 0 ) {
-            executare(c, &t, out, caractere);
-            afisTren(t, stdout);
+            executare(c, &t, out, caractere, cuvinte);
+            // afisTren(t, stdout);
         } else if ( strcmp(linie, "SHOW") == 0 ) {
             // printf("IN SHOW\n");
             afisTren(t, out);
@@ -82,6 +89,14 @@ int main(void) {
         } else if ( strcmp(linie, "SWITCH") == 0 ) {
             swapCoada(c);
             swapCoada(caractere);
+            swapCoada2(cuvinte);
+        } else if ( strcmp(linie, "SEARCH") == 0 ) { // SEARCH = 7
+            IntrQ(c, '7');
+            char *s = malloc(100 * sizeof(char));
+            printf("Am ajuns aici\n");
+            fscanf(f, " %s", s);
+            IntrQStr(cuvinte, s);
+            free(s);
         }
     }
 
@@ -89,6 +104,11 @@ int main(void) {
     fclose(f);
     fclose(out);
 
+    // Eliberam memoria
+    free(linie);
+    DistrQ(&c);
+    DistrQ(&caractere);
+    DistrQStr(&cuvinte);
     distrTren(&t);
 
 }
