@@ -52,33 +52,31 @@ void searchLeft(Tren *t, char*s, FILE *out) {
     int l = strlen(s);
     // printf("Lungimea cuvantului: %d\n", l);
     TLista aux = t->mecanic;
-    TLista indiceMecFinal = t->mecanic;
     int ok = 0;
-    int i = 1;
-    if ( t->mecanic->info == s[l - i] ) {
+    int i = 0;
+    if ( t->mecanic->info == s[i] ) {
         i++;
         // printf("Val i START: %d\n", i);
+        aux = aux->prev;
     } else {
         aux = aux->prev;
     }
     for ( ; aux != t->santinela ; aux = aux->prev ) {
 
-        if ( aux->info == s[l - i] ) {
+        if ( aux->info == s[i] ) {
             // printf("Val i FOR: %d\n", i);
-            if ( i == 1 )
-                indiceMecFinal = aux;
             i++;
         } else {
-            i = 1;
+            i = 0;
         }
-        if ( i == l + 1) {
+        if ( i == l ) {
             // printf("Am gasit ce cautam!\n");
             ok = 1;
             break;
         }
     }
     if ( ok ) {
-        t->mecanic = indiceMecFinal;
+        t->mecanic = aux;
         // printf("Val mecanic : %c\n", t->mecanic->info);
     } else {
         fprintf(out, "ERROR\n");
@@ -87,5 +85,31 @@ void searchLeft(Tren *t, char*s, FILE *out) {
 
 void searchRight(Tren *t, char *s, FILE *out) {
     int l = strlen(s);
-    (void) l;
+    TLista aux = t->mecanic;
+    int ok = 0;
+    int i = 0;
+    if ( t->mecanic->info == s[i] ) {
+        i++;
+        printf("Val i START: %d\n", i);
+        aux = aux->urm;
+    } else {
+        aux = aux->urm;
+    }
+    for ( ; aux != t->santinela ; aux = aux->urm ) {
+        if ( aux->info == s[i] ) {
+            i++;
+            printf("Val i FOR: %d\n", i);
+        } else {
+            i = 0;
+        }
+        if ( i == l ) {
+            ok = 1;
+            break;
+        }
+    }
+    if ( ok ) {
+        t->mecanic = aux;
+    } else {
+        fprintf(out, "ERROR\n");
+    }
 }
