@@ -30,6 +30,14 @@ void executare(TCoada *c, Tren **t, FILE *out, TCoada *caractere, TCoada2 *cuvin
         printf("Cuvantul citit: %s\n", s);
         search(*t, s, out);
         free(s);
+    } else if ( comanda_curenta == '8' ) {
+        char *s = ExtrQStr(cuvinte);
+        searchLeft(*t, s, out);
+        free(s);
+    } else if ( comanda_curenta == '9' ) {
+        char *s = ExtrQStr(cuvinte);
+        searchRight(*t, s, out);
+        free(s);
     }
 }
 
@@ -94,6 +102,18 @@ int main(void) {
             IntrQ(c, '7');
             char *s = malloc(100 * sizeof(char));
             printf("Am ajuns aici\n");
+            fscanf(f, " %s", s);
+            IntrQStr(cuvinte, s);
+            free(s);
+        } else if ( strcmp(linie, "SEARCH_LEFT") == 0 ) { // SEARCH_LEFT = 8
+            IntrQ(c, '8');
+            char *s = malloc(100 * sizeof(char));
+            fscanf(f, " %s", s);
+            IntrQStr(cuvinte, s);
+            free(s);
+        } else if ( strcmp(linie, "SEARCH_RIGHT") == 0 ) { // SEARCH_RIGHT = 9
+            IntrQ(c, '9');
+            char *s = malloc(100 * sizeof(char));
             fscanf(f, " %s", s);
             IntrQStr(cuvinte, s);
             free(s);

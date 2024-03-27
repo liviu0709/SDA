@@ -52,7 +52,10 @@ void distrTren(Tren**);
 void clearAll(Tren**);
 void insertRight(Tren*, char);
 void insertLeft(Tren*, char, FILE*);
+
 void search(Tren*, char*, FILE*);
+void searchLeft(Tren*, char*, FILE*);
+void searchRight(Tren*, char*, FILE*);
 
 TLista2 alocCelStr(char*);
 int IntrQStr(TCoada2*, char*);

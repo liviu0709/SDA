@@ -47,3 +47,45 @@ void search(Tren *t, char *s, FILE *out) {
         printf("Nu am gasit ce cautam!\n");
     }
 }
+
+void searchLeft(Tren *t, char*s, FILE *out) {
+    int l = strlen(s);
+    // printf("Lungimea cuvantului: %d\n", l);
+    TLista aux = t->mecanic;
+    TLista indiceMecFinal = t->mecanic;
+    int ok = 0;
+    int i = 1;
+    if ( t->mecanic->info == s[l - i] ) {
+        i++;
+        // printf("Val i START: %d\n", i);
+    } else {
+        aux = aux->prev;
+    }
+    for ( ; aux != t->santinela ; aux = aux->prev ) {
+
+        if ( aux->info == s[l - i] ) {
+            // printf("Val i FOR: %d\n", i);
+            if ( i == 1 )
+                indiceMecFinal = aux;
+            i++;
+        } else {
+            i = 1;
+        }
+        if ( i == l + 1) {
+            // printf("Am gasit ce cautam!\n");
+            ok = 1;
+            break;
+        }
+    }
+    if ( ok ) {
+        t->mecanic = indiceMecFinal;
+        // printf("Val mecanic : %c\n", t->mecanic->info);
+    } else {
+        fprintf(out, "ERROR\n");
+    }
+}
+
+void searchRight(Tren *t, char *s, FILE *out) {
+    int l = strlen(s);
+    (void) l;
+}
