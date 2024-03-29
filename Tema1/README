@@ -1,0 +1,18 @@
+De fiecare data cand citim o comanda, alegem ce facem cu ea:
+- intra in coada si isi asteapta executia
+- executa o comanda din coada (execute)
+- sunt executate pe loc (cele de query)
+Pentru implementare cozii pentru comenzi am folosit 2 cozi: una pentru numele comenzii(stocat sub forma de numar) si una pentru argumentelor comenzilor
+Cand este intalnita o comanda ce are argument, este extras argument din coada pentru argumente si se executa comanda cu argumentul respectiv
+Fiecare comanda are o functie proprie definita in tren.c (exceptie search si execute)
+Functia pentru execute se gaseste in main.c
+In coada.c se gasesc functiile necesare pentru implementarea cozii
+In operatiiSearch.c se gasesc functiile pentru search
+
+Fiecare comanda executa operatii de baza, ce constau in mare in refacerea / adaugarea / stergerea unor legaturi dintr-o lista dublu inlantuita.
+Unele comenzi au si cazuri speciale.
+
+Spre exemplu, move right adauga un vagon in dreapta daca mecanicul se afla deja in ultimul vagon din dreapta,
+fapt ce duce la refacerea altor legaturi din lista
+
+...
