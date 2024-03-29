@@ -4,11 +4,15 @@
 #include <string.h>
 #include "functii.h"
 
+// Functie pentru EXECUTE
 void executare(TCoada *c, Tren **t, FILE *out, TCoada *arg) {
+    // Obtinem numele comenzii din coada
     char *comanda = ExtrQ(c);
     char comanda_curenta = comanda[0];
     free(comanda);
     // printf("Comanda curenta: %c\n", comanda_curenta);
+    // Daca este necesar, extragem si argumentul acesteia (daca are)
+    // Fiecare comanda apeleaza o functie
     if ( comanda_curenta == '0' ) {
         moveLeft(*t);
     } else if ( comanda_curenta == '1' ) {
@@ -56,17 +60,20 @@ int main(void) {
 
     // Coada de comenzi
     TCoada *c = InitQ();
+    // Coada pentru argumentele comenzii
     TCoada *arg = InitQ();
     
     int nrComenzi;
     fscanf(f, "%d", &nrComenzi);
     char *linie = malloc(100 * sizeof(char));
+    // Citim fiecare comanda
     for ( int i = 0 ; i < nrComenzi ; i++ ) {
         
         fscanf(f, "%s", linie);
         // printf("Linie: %s\n", linie);
         // afisTren(t, stdout);
         // afisQ(c);
+        // Vedem ce facem cu comanda...
         if ( strcmp(linie, "MOVE_LEFT") == 0 ) { // MOVE_LEFT = 0
             IntrQ(c, "0");
         } else if ( strcmp(linie, "MOVE_RIGHT") == 0 ) { // MOVE_RIGHT = 1
@@ -93,6 +100,7 @@ int main(void) {
             fscanf(f, " %s", cc);
             IntrQ(arg, &cc[0]);
         } else if ( strcmp(linie, "EXECUTE") == 0 ) {
+            // Executam o comanda din stiva
             executare(c, &t, out, arg);
             // afisTren(t, stdout);
         } else if ( strcmp(linie, "SHOW") == 0 ) {
@@ -106,7 +114,7 @@ int main(void) {
         } else if ( strcmp(linie, "SEARCH") == 0 ) { // SEARCH = 7
             IntrQ(c, "7");
             char *s = malloc(100 * sizeof(char));
-            printf("Am ajuns aici\n");
+            // printf("Am ajuns aici\n");
             fscanf(f, " %s", s);
             IntrQ(arg, s);
             free(s);
