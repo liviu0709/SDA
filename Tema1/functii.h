@@ -15,17 +15,14 @@ typedef struct celulaStr
   char *info;
   struct celulaStr* urm;
   struct celulaStr *prev;
-} TCelula2, *TLista2;
+} TCelulaStr, *TListaStr;
 
 typedef struct coada
 { 
-  TLista sf, inc;
+  TListaStr sf, inc;
 } TCoada;
 
-typedef struct coada2
-{ 
-  TLista2 sf, inc;
-} TCoada2;
+
 
 typedef struct tren
 {
@@ -35,9 +32,9 @@ typedef struct tren
 
 TLista alocCel(char);
 
-char ExtrQ(TCoada*);
+char* ExtrQ(TCoada*);
 void afisQ(TCoada*);
-int IntrQ(TCoada*, char);
+int IntrQ(TCoada*, char*);
 TCoada* InitQ();
 void DistrQ(TCoada**);
 void swapCoada(TCoada*);
@@ -56,11 +53,3 @@ void insertLeft(Tren*, char, FILE*);
 void search(Tren*, char*, FILE*);
 void searchLeft(Tren*, char*, FILE*);
 void searchRight(Tren*, char*, FILE*);
-
-TLista2 alocCelStr(char*);
-int IntrQStr(TCoada2*, char*);
-void afisQStr(TCoada2*);
-void DistrQStr(TCoada2**);
-char* ExtrQStr(TCoada2*);
-TCoada2* InitQStr();
-void swapCoada2(TCoada2*);
