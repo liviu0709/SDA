@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+// Functie de baza pentru tren
 TLista alocCel(char x) {
     TLista cel = (TLista) malloc(sizeof(TCelula));
     if ( !cel ) return NULL;
@@ -13,6 +14,7 @@ TLista alocCel(char x) {
     return cel;
 }
 
+// Celula de baza pentru cozi
 TListaStr alocCelStr(char *x) {
     TListaStr cel = (TListaStr) malloc(sizeof(TCelulaStr));
     if ( !cel ) return NULL;
@@ -66,7 +68,7 @@ char* ExtrQ(TCoada *c) {
     return NULL;
 }
 
-
+// Functie folosita nicaieri?
 void afisQ(TCoada *c) {
     printf("Coada este: ");
     TListaStr aux = c->inc;
@@ -77,7 +79,7 @@ void afisQ(TCoada *c) {
     printf("\n");
 }
 
-
+// Trb punctaj la valgrind deci...
 void DistrQ(TCoada **c) {
   // if ( !(*c)->sf ) return; 
   for ( TListaStr aux = (*c)->inc  ; aux != NULL ; ) {
@@ -89,7 +91,8 @@ void DistrQ(TCoada **c) {
   free(*c);
 }
 
-
+// Apelata pentru fiecare coada cand este citita
+// Comanda SWAP
 void swapCoada(TCoada *c) {
     // afisQ(c);
     for ( TListaStr aux = c->sf ; aux != NULL ; aux = aux->urm ) {

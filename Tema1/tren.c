@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include "functii.h"
 
+// Majoritatea functiilor sunt apelate in functie 
+// de comanda primita
+
+// Initializare tren cu 1 vagon
 Tren* alocTren() {
     Tren *x = (Tren*) malloc(sizeof(Tren));
     TLista vag1 = malloc(sizeof(TCelula));
@@ -14,6 +18,7 @@ Tren* alocTren() {
     return x;
 }
 
+// Stergere tren -> valgrind
 void distrTren(Tren **x) {
     if ( !(*x)->mecanic ) return; 
     for ( TLista aux = (*x)->santinela->urm  ; aux != (*x)->santinela ; ) {
@@ -35,6 +40,7 @@ void moveLeft(Tren *t) {
 }
 
 int moveRight(Tren *t) {
+    // Daca este in ultimul vagon, mai cuplam unul
     if ( t->mecanic->urm == t->santinela ) {
         TLista aux = malloc(sizeof(TCelula));
         if ( !aux ) return 1;
@@ -50,11 +56,13 @@ int moveRight(Tren *t) {
     return 0;
 }
 
+// Cea mai lunga functie din tema
 void writeC(char c, Tren *t) {
     t->mecanic->info = c;
 }
 
 void clearCell(Tren *t) {
+    // Primul vagon din tren
     if ( t->mecanic->prev == t->santinela ) {
         if ( t->mecanic->urm == t->santinela ) {
             t->mecanic->info = '#';
@@ -67,12 +75,14 @@ void clearCell(Tren *t) {
             free(aux);
         }
     } else {
+        // Un vagon din mijlocul trenului
         if ( t->mecanic->urm != t->santinela ) {
             TLista aux = t->mecanic;
             t->mecanic->prev->urm = t->mecanic->urm;
             t->mecanic->urm->prev = t->mecanic->prev;
             t->mecanic = t->mecanic->prev;
             free(aux);
+        // Capatul din dreapta al trenului
         } else {
             TLista aux = t->mecanic;
             t->santinela->prev = t->mecanic->prev;
@@ -84,12 +94,15 @@ void clearCell(Tren *t) {
 }
 
 void clearAll(Tren** t) {
+    // Stergem tot
     distrTren(t);
+    // Ajungem in starea initiala
     *t = alocTren();
     
 }
 
 void insertRight(Tren *t, char c) {
+    // Mecanicul este in ultimul vagon
     if ( t->mecanic->urm == t->santinela ) {
         moveRight(t);
         t->mecanic->info = c;
@@ -103,6 +116,7 @@ void insertRight(Tren *t, char c) {
 }
 
 void insertLeft(Tren *t, char c, FILE *out) {
+    // Caz particular - primul vagon
     if ( t->mecanic->prev == t->santinela ) {
         fprintf(out, "ERROR\n");
     } else {
