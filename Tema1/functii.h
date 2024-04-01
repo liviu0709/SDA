@@ -1,4 +1,6 @@
 /* STOICA Liviu-Gabriel - 311CB */
+#ifndef FUNCTII_H
+#define FUNCTII_H
 #include <stdio.h>
 
 
@@ -53,3 +55,5 @@ void insertLeft(Tren*, char, FILE*);
 void search(Tren*, char*, FILE*);
 void searchLeft(Tren*, char*, FILE*);
 void searchRight(Tren*, char*, FILE*);
+
+#endif
