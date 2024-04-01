@@ -65,25 +65,53 @@ int numaraNoPrintf(TArb a, int x) {
 		// printf("%d ", a->info);
 		cnt++;
 	}
-	return cnt + numara(a->st, x);
+	return cnt + numaraNoPrintf(a->st, x);
+}
+
+int cautX(TArb a, int x, int nivel) {
+	if(!a) return 0;
+	int sol = 0;
+	if ( a->info < x ) {
+		sol = nivel;
+	}
+	return sol + cautX(a->dr, x, nivel + 1) + cautX(a->st, x, nivel + 1);
 }
 
 int verifica(TArb a, int x, int nivel) {
-	if (!a) return 0;
-	if ( numaraNoPrintf(a, x) == 1 ) {
-		if ( a->info < x )
-			return nivel;
-		else {
-			if ( verifica(a, x, nivel + 1) > 0 || verifica(a, x, nivel + 1) > 0 ) 
-				return nivel;
-			else {
-				verifica(a, x, nivel + 1);
-				verifica(a, x, nivel + 1);
-			}
+	if ( numaraNoPrintf(a, x) == 1 )
+		return cautX(a, x, 1);
+	return -1;
+}
 
+void duplica(TArb x) {
+	if ( !x ) return;
+	if ( x->dr == NULL && x->st != NULL) {
+		TArb aux = Constr_Frunza(x->info);
+		aux->st = x->st;
+		x->st = aux;
+		x = x->st;
+	} else {
+		if ( x->st == NULL && x->dr != NULL ) {
+			TArb aux = Constr_Frunza(x->info);
+			aux->dr = x->dr;
+			x->dr = aux;
+			x = x->dr;
 		}
-	} else
-		return -1;
+	}
+	duplica(x->dr);
+	duplica(x->st);
+}
+
+void SRD(TArb x) {
+	if( !x ) return; 
+	SRD(x->st);
+	printf("%d ", x->info);
+	SRD(x->dr);
+}
+
+void duplicaArb(TArb x) {
+	duplica(x);
+	SRD(x);
 }
 
 /* Parcurgere Radacina - Stanga - Dreapta */

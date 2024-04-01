@@ -17,3 +17,4 @@ void AfiArb(TArb r);
 
 int numara(TArb, int);
 int verifica(TArb, int, int);
+void duplicaArb(TArb);

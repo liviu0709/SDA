@@ -14,6 +14,8 @@ int main() {
     printf("\n");
     printf("\nNr elemente: %d\n", numara(arbore, 15));
     printf(" \nVerifica:%d\n", verifica(arbore, 6, 1));
+    duplicaArb(arbore);
+    AfiArb(arbore);
     DistrugeArb(&arbore);
     return 0;
 }
