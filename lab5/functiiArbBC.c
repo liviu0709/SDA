@@ -44,6 +44,48 @@ int InserareABC(TArb *arbore, int elem) {
     return 1;
 }
 
+int numara(TArb a, int x) {
+	if (!a) {
+		return 0;
+	}
+	int cnt = numara(a->dr, x);
+	if ( a->info < x ) {
+		printf("%d ", a->info);
+		cnt++;
+	}
+	return cnt + numara(a->st, x);
+}
+
+int numaraNoPrintf(TArb a, int x) {
+	if (!a) {
+		return 0;
+	}
+	int cnt = numara(a->dr, x);
+	if ( a->info < x ) {
+		// printf("%d ", a->info);
+		cnt++;
+	}
+	return cnt + numara(a->st, x);
+}
+
+int verifica(TArb a, int x, int nivel) {
+	if (!a) return 0;
+	if ( numaraNoPrintf(a, x) == 1 ) {
+		if ( a->info < x )
+			return nivel;
+		else {
+			if ( verifica(a, x, nivel + 1) > 0 || verifica(a, x, nivel + 1) > 0 ) 
+				return nivel;
+			else {
+				verifica(a, x, nivel + 1);
+				verifica(a, x, nivel + 1);
+			}
+
+		}
+	} else
+		return -1;
+}
+
 /* Parcurgere Radacina - Stanga - Dreapta */
 void RSD(TArb a) {
 	if (!a) {

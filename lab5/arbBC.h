@@ -14,3 +14,6 @@ void RSD(TArb a);
 void PrintareArbore(TArb arbore, int spatiu);
 void DistrugeArb(TArb *adrArbore);
 void AfiArb(TArb r);
+
+int numara(TArb, int);
+int verifica(TArb, int, int);

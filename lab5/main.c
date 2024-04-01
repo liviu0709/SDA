@@ -12,7 +12,8 @@ int main() {
     AfiArb(arbore);
     RSD(arbore);
     printf("\n");
-
+    printf("\nNr elemente: %d\n", numara(arbore, 15));
+    printf(" \nVerifica:%d\n", verifica(arbore, 6, 1));
     DistrugeArb(&arbore);
     return 0;
 }
