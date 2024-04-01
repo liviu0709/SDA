@@ -10,9 +10,11 @@
 
 void search(Tren *t, char *s, FILE *out) {
     // Gasim lungimea sirului de cautat
+    printf("AM plecat sa cautam\n");
     int l = strlen(s);
     // printf("Lungimea cuvantului: %d\n", l);
     TLista aux = t->mecanic;
+    TLista inceputSecv;
     // printf("Cautam cuvantul: %s\n", s);
     int ok = 0;
     int i = 0;
@@ -20,6 +22,7 @@ void search(Tren *t, char *s, FILE *out) {
     // cu cel din vagonul in care se afla mecanicul
     if ( t->mecanic->info == s[i] ) {
         i++;
+        inceputSecv = t->mecanic;
     // In caz contrar, mergem mai departe
     } else {
         aux = aux->urm;
@@ -37,14 +40,18 @@ void search(Tren *t, char *s, FILE *out) {
         // Cautam sirul...
         if ( aux->info == s[i] ) {
             i++;
+            if ( i == 1 ) {
+                inceputSecv = aux;
+            }
         // Daca un caracter nu mai este ce trb...
         // o luam de la 0
         } else {
             i = 0;
+            aux = inceputSecv->urm;
         }
         // In sfarsit am gasit ceea ce cautam?
         if ( i == l - 1 ) {
-            printf("Minunat\n")
+            printf("Minunat\n");
             ok = 1;
             break;
         }
@@ -71,6 +78,7 @@ void searchLeft(Tren *t, char*s, FILE *out) {
     int l = strlen(s);
     // printf("Lungimea cuvantului: %d\n", l);
     TLista aux = t->mecanic;
+    TLista inceputSecv;
     int ok = 0;
     int i = 0;
     // Verificam daca primul caracter din sir se gaseste
@@ -79,6 +87,7 @@ void searchLeft(Tren *t, char*s, FILE *out) {
         i++;
         // printf("Val i START: %d\n", i);
         aux = aux->prev;
+        inceputSecv = t->mecanic;
     // In caz contrar, mergem mai departe
     } else {
         aux = aux->prev;
@@ -88,10 +97,14 @@ void searchLeft(Tren *t, char*s, FILE *out) {
         if ( aux->info == s[i] ) {
             // printf("Val i FOR: %d\n", i);
             i++;
+            if ( i == 1 ) {
+                inceputSecv = aux;
+            }
         // Daca nu e ce trb...
         // O luam de la capat
         } else {
             i = 0;
+            aux = inceputSecv->urm;
         }
         // In sfarsit am gasit ceea ce cautam?
         if ( i == l ) {
@@ -114,6 +127,7 @@ void searchRight(Tren *t, char *s, FILE *out) {
     // Gasim lungimea sirului de cautat
     int l = strlen(s);
     TLista aux = t->mecanic;
+    TLista inceputSecv;
     int ok = 0;
     int i = 0;
     // Verificam daca primul caracter din sir se gaseste
@@ -122,6 +136,7 @@ void searchRight(Tren *t, char *s, FILE *out) {
         i++;
         //printf("Val i START: %d\n", i);
         aux = aux->urm;
+        inceputSecv = t->mecanic;
     // In caz contrar, mergem mai departe
     } else {
         aux = aux->urm;
@@ -130,11 +145,15 @@ void searchRight(Tren *t, char *s, FILE *out) {
         // Cautam sirul ...
         if ( aux->info == s[i] ) {
             i++;
+            if ( i == 1 ) {
+                inceputSecv = aux;
+            }
             // printf("Val i FOR: %d\n", i);
         // In caz contrar
         // o luam de la capat
         } else {
             i = 0;
+            aux = inceputSecv->urm;
         }
         // Am gasit ceea ce cautam ?
         if ( i == l ) {
