@@ -10,11 +10,10 @@
 
 void search(Tren *t, char *s, FILE *out) {
     // Gasim lungimea sirului de cautat
-    printf("AM plecat sa cautam\n");
     int l = strlen(s);
     // printf("Lungimea cuvantului: %d\n", l);
     TLista aux = t->mecanic;
-    TLista inceputSecv;
+    TLista inceputSecv = t->mecanic;
     // printf("Cautam cuvantul: %s\n", s);
     int ok = 0;
     int i = 0;
@@ -23,80 +22,68 @@ void search(Tren *t, char *s, FILE *out) {
     if ( t->mecanic->info == s[i] ) {
         i++;
         inceputSecv = t->mecanic;
-    // In caz contrar, mergem mai departe
-    } else {
-        aux = aux->urm;
+        // Daca am gasit ce cautam ... nu mergem mai departe
+        if ( i == l )
+            ok = 1;
     }
-    // printf("Val i: %d\n", i);
-    for ( ; aux->urm != t->mecanic ; aux = aux->urm ) {
-        // Sarim peste santinela
-        if ( aux == t->santinela ) {
+    if ( !ok ) {
+        do {
             aux = aux->urm;
-            // Conditie oprire
-            if ( aux == t->mecanic ) {
-                break;
+            // Sarim peste santinela
+            if ( aux == t->santinela ) {
+                aux = aux->urm;
+                // Conditie oprire
+                if ( aux == t->mecanic ) {
+                    break;
+                }
             }
-        }
-        // Cautam sirul...
-        if ( aux->info == s[i] ) {
-            i++;
-            if ( i == 1 ) {
+            // Cautam sirul...
+            if ( aux->info == s[i] ) {
+                i++;
+                // Daca e inceputul sirului, il tinem minte
+                if ( i == 1 )
+                    inceputSecv = aux;
+            // Daca un caracter nu mai este ce trb...
+            // o luam de la 0
+            } else {
+                i = 0;
+                // Continuam cautarea cu o pozitie mai in fata
+                aux = inceputSecv->urm;
                 inceputSecv = aux;
             }
-        // Daca un caracter nu mai este ce trb...
-        // o luam de la 0
-        } else {
-            i = 0;
-            aux = inceputSecv->urm;
-        }
-        // In sfarsit am gasit ceea ce cautam?
-        if ( i == l - 1 ) {
-            printf("Minunat\n");
-            ok = 1;
-            break;
-        }
-    }
-    if ( ok ) {
-        //printf("Am gasit ce cautam!\n");
-        for ( int j = 0 ; j < i - 1; j++ ) {
-            aux = aux->prev;
-            if ( aux == t->santinela ) {
-                aux = aux->prev;
+            // In sfarsit am gasit ceea ce cautam!
+            if ( i == l ) {
+                ok = 1;
+                break;
             }
-        }
-        // Ducem mecanicul la locul cerut
-        t->mecanic = aux;
-    } else {
-        // Naspa, nu e ce trb
-        fprintf(out, "ERROR\n");
-        // printf("Nu am gasit ce cautam!\n");
+        } while (aux->urm != t->mecanic);
     }
+
+    if ( ok )
+        t->mecanic = inceputSecv;
+    else
+        fprintf(out, "ERROR\n");
 }
 
 void searchLeft(Tren *t, char*s, FILE *out) {
     // Gasim lungimea sirului de cautat
     int l = strlen(s);
-    // printf("Lungimea cuvantului: %d\n", l);
     TLista aux = t->mecanic;
-    TLista inceputSecv;
+    TLista inceputSecv = t->mecanic;
     int ok = 0;
     int i = 0;
     // Verificam daca primul caracter din sir se gaseste
     // cu cel din vagonul in care se afla mecanicul
     if ( t->mecanic->info == s[i] ) {
         i++;
-        // printf("Val i START: %d\n", i);
-        aux = aux->prev;
         inceputSecv = t->mecanic;
-    // In caz contrar, mergem mai departe
-    } else {
-        aux = aux->prev;
     }
+    aux = aux->prev;
     for ( ; aux != t->santinela ; aux = aux->prev ) {
         // Cautam sirul...
         if ( aux->info == s[i] ) {
-            // printf("Val i FOR: %d\n", i);
             i++;
+            // Daca e inceputul sirului, il tinem minte
             if ( i == 1 ) {
                 inceputSecv = aux;
             }
@@ -104,23 +91,20 @@ void searchLeft(Tren *t, char*s, FILE *out) {
         // O luam de la capat
         } else {
             i = 0;
-            aux = inceputSecv->urm;
+            // Continuam cautarea cu o pozitie mai la stanga
+            aux = inceputSecv->prev;
+            inceputSecv = aux;
         }
-        // In sfarsit am gasit ceea ce cautam?
+        // In sfarsit am gasit ceea ce cautam
         if ( i == l ) {
-            // printf("Am gasit ce cautam!\n");
             ok = 1;
             break;
         }
     }
-    if ( ok ) {
-        // Mutam mecanicul unde trebuie
+    if ( ok )
         t->mecanic = aux;
-        // printf("Val mecanic : %c\n", t->mecanic->info);
-    } else {
-        // Ghiunion
+    else
         fprintf(out, "ERROR\n");
-    }
 }
 
 void searchRight(Tren *t, char *s, FILE *out) {
@@ -134,13 +118,10 @@ void searchRight(Tren *t, char *s, FILE *out) {
     // cu cel din vagonul in care se afla mecanicul
     if ( t->mecanic->info == s[i] ) {
         i++;
-        //printf("Val i START: %d\n", i);
-        aux = aux->urm;
         inceputSecv = t->mecanic;
-    // In caz contrar, mergem mai departe
-    } else {
-        aux = aux->urm;
     }
+    // In caz contrar, mergem mai departe
+    aux = aux->urm;
     for ( ; aux != t->santinela ; aux = aux->urm ) {
         // Cautam sirul ...
         if ( aux->info == s[i] ) {
@@ -148,24 +129,22 @@ void searchRight(Tren *t, char *s, FILE *out) {
             if ( i == 1 ) {
                 inceputSecv = aux;
             }
-            // printf("Val i FOR: %d\n", i);
         // In caz contrar
         // o luam de la capat
         } else {
             i = 0;
+            // Continuam cautarea cu o pozitie mai la dreapta
             aux = inceputSecv->urm;
+            inceputSecv = aux;
         }
-        // Am gasit ceea ce cautam ?
+        // Am gasit ceea ce cautam
         if ( i == l ) {
             ok = 1;
             break;
         }
     }
-    if ( ok ) {
-        // Mutam mecanicul
+    if ( ok )
         t->mecanic = aux;
-    } else {
-        // Naspa...
+    else
         fprintf(out, "ERROR\n");
-    }
 }
