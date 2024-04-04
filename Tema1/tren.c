@@ -8,10 +8,20 @@
 // Initializare tren cu 1 vagon
 Tren* alocTren() {
     Tren *x = (Tren*) malloc(sizeof(Tren));
+    if ( !x ) return NULL;
     TLista vag1 = malloc(sizeof(TCelula));
+    if ( !vag1 ) {
+        free(x);
+        return NULL;
+    }
     vag1->info = '#';
     x->mecanic = vag1;
     TLista sant = malloc(sizeof(TCelula));
+    if ( !sant ) {
+        free(x);
+        free(vag1);
+        return NULL;
+    }
     x->santinela = sant;
     sant->prev = sant->urm = vag1;
     vag1->prev = vag1->urm = sant;

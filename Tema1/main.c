@@ -10,7 +10,6 @@ void executare(TCoada *c, Tren **t, FILE *out, TCoada *arg) {
     char *comanda = ExtrQ(c);
     char comanda_curenta = comanda[0];
     free(comanda);
-    // printf("Comanda curenta: %c\n", comanda_curenta);
     // Daca este necesar, extragem si argumentul acesteia (daca are)
     // Fiecare comanda apeleaza o functie
     if ( comanda_curenta == '0' ) {
