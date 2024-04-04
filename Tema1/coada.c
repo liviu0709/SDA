@@ -41,9 +41,6 @@ int IntrQ(TCoada *c, char *x) {
         aux->prev = c->sf;
         c->sf->urm = aux;
         c->sf = aux;
-        // c->sf->urm = aux;
-        // aux->prev = c->sf;
-        // c->sf = aux;
     }
     return 0;
 }
@@ -54,7 +51,9 @@ char* ExtrQ(TCoada *c) {
     if ( c->inc ) {
         char *data = malloc(sizeof(char) * (strlen(c->inc->info) + 1));
         TListaStr aux = c->inc;
+        // Alocam memorie pentru sirul returnat
         strcpy(data, c->inc->info);
+        // Eliberam memoria din stiva
         free(c->inc->info);
         if ( c->inc->urm ) {
             c->inc->urm->prev = NULL;
@@ -68,20 +67,8 @@ char* ExtrQ(TCoada *c) {
     return NULL;
 }
 
-// Functie folosita nicaieri?
-void afisQ(TCoada *c) {
-    printf("Coada este: ");
-    TListaStr aux = c->inc;
-    while ( aux ) {
-        printf("%s ", aux->info);
-        aux = aux->urm;
-    }
-    printf("\n");
-}
-
 // Trb punctaj la valgrind deci...
 void DistrQ(TCoada **c) {
-  // if ( !(*c)->sf ) return; 
   for ( TListaStr aux = (*c)->inc  ; aux != NULL ; ) {
     TListaStr aux2 = aux;
     aux = aux->urm;
@@ -94,16 +81,15 @@ void DistrQ(TCoada **c) {
 // Apelata pentru fiecare coada cand este citita
 // Comanda SWAP
 void swapCoada(TCoada *c) {
-    // afisQ(c);
+    // Inversam directia de parcurgere a cozii
     for ( TListaStr aux = c->sf ; aux != NULL ; aux = aux->urm ) {
         TListaStr aux2 = aux->prev;
         aux->prev = aux->urm;
         aux->urm = aux2;
-        // printf("aux->info: %c\n", aux->info);
     }
+    // Inversam capetele cozii
     TListaStr aux = c->inc;
     c->inc = c->sf;
     c->sf = aux;
-    // afisQ(c);
 }
 

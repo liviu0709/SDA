@@ -32,6 +32,7 @@ void distrTren(Tren **x) {
 }
 
 void moveLeft(Tren *t) {
+    // Daca este primul vagon de langa locomotiva...
     if ( t->mecanic->prev == t->santinela ) {
         t->mecanic = t->santinela->prev;
     } else {
@@ -64,11 +65,13 @@ void writeC(char c, Tren *t) {
 void clearCell(Tren *t) {
     // Primul vagon din tren
     if ( t->mecanic->prev == t->santinela ) {
+        // Daca trenul avea un singur vagon
+        // Se revine la starea initiala
         if ( t->mecanic->urm == t->santinela ) {
             t->mecanic->info = '#';
+        // Altfel se muta mecanicul in capatul trenului
         } else {
             TLista aux = t->mecanic;
-            // t->mecanic->prev->urm = t->mecanic->urm;
             t->santinela->urm = t->mecanic->urm;
             t->mecanic->urm->prev = t->santinela;
             t->mecanic = t->santinela->prev;
@@ -112,6 +115,7 @@ void insertRight(Tren *t, char c) {
         aux->urm = t->mecanic->urm;
         t->mecanic->urm->prev = aux;
         t->mecanic->urm = aux;
+        t->mecanic = aux;
     }
 }
 
@@ -125,6 +129,7 @@ void insertLeft(Tren *t, char c, FILE *out) {
         aux->prev = t->mecanic->prev;
         t->mecanic->prev->urm = aux;
         t->mecanic->prev = aux;
+        t->mecanic = aux;
     }
 }
 

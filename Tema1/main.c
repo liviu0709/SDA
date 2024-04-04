@@ -36,7 +36,6 @@ void executare(TCoada *c, Tren **t, FILE *out, TCoada *arg) {
         free(cc);
     } else if ( comanda_curenta == '7' ) {
         char *s = ExtrQ(arg);
-        printf("Cuvantul citit: %s\n", s);
         search(*t, s, out);
         free(s);
     } else if ( comanda_curenta == '8' ) {
@@ -68,11 +67,7 @@ int main(void) {
     char *linie = malloc(100 * sizeof(char));
     // Citim fiecare comanda
     for ( int i = 0 ; i < nrComenzi ; i++ ) {
-        
         fscanf(f, "%s", linie);
-        // printf("Linie: %s\n", linie);
-        // afisTren(t, stdout);
-        // afisQ(c);
         // Vedem ce facem cu comanda...
         if ( strcmp(linie, "MOVE_LEFT") == 0 ) { // MOVE_LEFT = 0
             IntrQ(c, "0");
@@ -80,7 +75,6 @@ int main(void) {
             IntrQ(c, "1");
         } else if ( strcmp(linie, "WRITE") == 0 ) { // WRITE = 2
             IntrQ(c, "2");
-            // printf("Am ajuns aici\n");
             char *cc = malloc(sizeof(char) * 2);
             fscanf(f, " %s", cc);
             IntrQ(arg, &cc[0]);
@@ -94,17 +88,17 @@ int main(void) {
             char *cc = malloc(sizeof(char) * 2);
             fscanf(f, " %s", cc);
             IntrQ(arg, &cc[0]);
+            free(cc);
         } else if ( strcmp(linie, "INSERT_LEFT") == 0 ) { // INSERT_LEFT = 6
             IntrQ(c, "6");
             char *cc = malloc(sizeof(char) * 2);
             fscanf(f, " %s", cc);
             IntrQ(arg, &cc[0]);
+            free(cc);
         } else if ( strcmp(linie, "EXECUTE") == 0 ) {
             // Executam o comanda din stiva
             executare(c, &t, out, arg);
-            // afisTren(t, stdout);
         } else if ( strcmp(linie, "SHOW") == 0 ) {
-            // printf("IN SHOW\n");
             afisTren(t, out);
         } else if ( strcmp(linie, "SHOW_CURRENT") == 0 ) {
             fprintf(out, "%c\n", t->mecanic->info);
@@ -114,7 +108,6 @@ int main(void) {
         } else if ( strcmp(linie, "SEARCH") == 0 ) { // SEARCH = 7
             IntrQ(c, "7");
             char *s = malloc(100 * sizeof(char));
-            // printf("Am ajuns aici\n");
             fscanf(f, " %s", s);
             IntrQ(arg, s);
             free(s);

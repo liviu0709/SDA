@@ -3,8 +3,6 @@
 #define FUNCTII_H
 #include <stdio.h>
 
-
-
 typedef struct celula
 { 
   char info;
@@ -23,8 +21,6 @@ typedef struct coada
 { 
   TListaStr sf, inc;
 } TCoada;
-
-
 
 typedef struct tren
 {

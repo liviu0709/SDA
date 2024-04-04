@@ -1,13 +1,14 @@
 CFLAGS=-Wall -Werror
 
-run: main
-	./main
+run: tema1
+	./tema1
 
-main: main.c coada.c tren.c operatiiSearch.c
-	gcc main.c coada.c tren.c operatiiSearch.c $(CFLAGS) -o main
+tema1: main.c coada.c tren.c operatiiSearch.c
+	gcc main.c coada.c tren.c operatiiSearch.c $(CFLAGS) -o tema1
 
 clean:
-	rm -f main
+	rm -f tema1
 
-valgrind: main
-	valgrind --leak-check=yes --track-origins=yes ./main
+valgrind: tema1
+	valgrind --leak-check=yes --track-origins=yes ./tema1
+	
