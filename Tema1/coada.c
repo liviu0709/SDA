@@ -21,6 +21,10 @@ TListaStr alocCelStr(char *x) {
     cel->prev = NULL;
     cel->urm = NULL;
     cel->info = malloc( (strlen(x) + 1) * sizeof(char) );
+    if ( !cel->info ) {
+        free(cel);
+        return NULL;
+    }
     strcpy(cel->info, x);
     return cel;
 }
@@ -49,9 +53,10 @@ int IntrQ(TCoada *c, char *x) {
 // Datele returnate trb dezalocate dupa utilizare
 char* ExtrQ(TCoada *c) {
     if ( c->inc ) {
-        char *data = malloc(sizeof(char) * (strlen(c->inc->info) + 1));
-        TListaStr aux = c->inc;
         // Alocam memorie pentru sirul returnat
+        char *data = malloc(sizeof(char) * (strlen(c->inc->info) + 1));
+        if ( !data ) return NULL;
+        TListaStr aux = c->inc;
         strcpy(data, c->inc->info);
         // Eliberam memoria din stiva
         free(c->inc->info);
