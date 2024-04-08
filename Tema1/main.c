@@ -55,17 +55,19 @@ int main(void) {
     // Deschidem fisierele
     FILE *f = fopen("tema1.in", "r");
     FILE *out = fopen("tema1.out", "w");
-
+    if (!f)
+        return 0;
     // Coada de comenzi
     TCoada *c = InitQ();
     // Coada pentru argumentele comenzii
     TCoada *arg = InitQ();
-    
+
     int nrComenzi;
     fscanf(f, "%d", &nrComenzi);
     char *linie = malloc(100 * sizeof(char));
+    int i = 0;
     // Citim fiecare comanda
-    for ( int i = 0 ; i < nrComenzi ; i++ ) {
+    for ( i = 0 ; i < nrComenzi ; i++ ) {
         fscanf(f, "%s", linie);
         // Vedem ce facem cu comanda...
         if ( strcmp(linie, "MOVE_LEFT") == 0 ) { // MOVE_LEFT = 0
@@ -134,5 +136,5 @@ int main(void) {
     DistrQ(&c);
     DistrQ(&arg);
     distrTren(&t);
-
+    return 0;
 }
