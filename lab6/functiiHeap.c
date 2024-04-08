@@ -28,7 +28,7 @@ int RelMaxHeap(int a, int b) {
 }
 
 void AfisareHeap(THeap* h, int pos) {
-    if (pos >= h->nrMax) {      
+    if (pos >= h->nrElem) {      
         printf("-"); 
         return;
     }
