@@ -1,8 +1,8 @@
 /* STOICA Liviu-Gabriel - 311CB */
-#include "functii.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "functii.h"
 
 // Functie de baza pentru tren
 TLista alocCel(char x) {
@@ -30,7 +30,7 @@ TListaStr alocCelStr(char *x) {
 }
 
 TCoada* InitQ() {
-    TCoada *coada = (TCoada*) malloc(sizeof(TCoada));
+    TCoada *coada = malloc(sizeof(TCoada));
     if ( !coada ) return NULL;
     coada->inc = coada->sf = NULL;
     return coada;
@@ -74,26 +74,29 @@ char* ExtrQ(TCoada *c) {
 
 // Trb punctaj la valgrind deci...
 void DistrQ(TCoada **c) {
-  for ( TListaStr aux = (*c)->inc  ; aux != NULL ; ) {
-    TListaStr aux2 = aux;
-    aux = aux->urm;
-    if( aux2->info != NULL ) free(aux2->info);
-    free(aux2);
-  }
-  free(*c);
+    TListaStr aux = (*c)->inc;
+    for ( aux = (*c)->inc  ; aux != NULL ; ) {
+        TListaStr aux2 = aux;
+        aux = aux->urm;
+        if ( aux2->info != NULL )
+            free(aux2->info);
+        free(aux2);
+    }
+    free(*c);
 }
 
 // Apelata pentru fiecare coada cand este citita
 // Comanda SWAP
 void swapCoada(TCoada *c) {
     // Inversam directia de parcurgere a cozii
-    for ( TListaStr aux = c->sf ; aux != NULL ; aux = aux->urm ) {
+    TListaStr aux = c->sf;
+    for ( aux = c->sf ; aux != NULL ; aux = aux->urm ) {
         TListaStr aux2 = aux->prev;
         aux->prev = aux->urm;
         aux->urm = aux2;
     }
     // Inversam capetele cozii
-    TListaStr aux = c->inc;
+    aux = c->inc;
     c->inc = c->sf;
     c->sf = aux;
 }

@@ -70,27 +70,27 @@ int main(void) {
     for ( i = 0 ; i < nrComenzi ; i++ ) {
         fscanf(f, "%s", linie);
         // Vedem ce facem cu comanda...
-        if ( strcmp(linie, "MOVE_LEFT") == 0 ) { // MOVE_LEFT = 0
+        if ( strcmp(linie, "MOVE_LEFT") == 0 ) {  // MOVE_LEFT = 0
             IntrQ(c, "0");
-        } else if ( strcmp(linie, "MOVE_RIGHT") == 0 ) { // MOVE_RIGHT = 1
+        } else if ( strcmp(linie, "MOVE_RIGHT") == 0 ) {  // MOVE_RIGHT = 1
             IntrQ(c, "1");
-        } else if ( strcmp(linie, "WRITE") == 0 ) { // WRITE = 2
+        } else if ( strcmp(linie, "WRITE") == 0 ) {  // WRITE = 2
             IntrQ(c, "2");
             char *cc = malloc(sizeof(char) * 2);
             fscanf(f, " %s", cc);
             IntrQ(arg, &cc[0]);
             free(cc);
-        } else if ( strcmp(linie, "CLEAR_CELL") == 0 ) { // CLEAR = 3
+        } else if ( strcmp(linie, "CLEAR_CELL") == 0 ) {  // CLEAR = 3
             IntrQ(c, "3");
-        } else if ( strcmp(linie, "CLEAR_ALL") == 0 ) { // CLEAR_ALL = 4
+        } else if ( strcmp(linie, "CLEAR_ALL") == 0 ) {  // CLEAR_ALL = 4
             IntrQ(c, "4");
-        } else if ( strcmp(linie, "INSERT_RIGHT") == 0 ) { // INSERT_RIGHT = 5
+        } else if ( strcmp(linie, "INSERT_RIGHT") == 0 ) {  // INSERT_RIGHT = 5
             IntrQ(c, "5");
             char *cc = malloc(sizeof(char) * 2);
             fscanf(f, " %s", cc);
             IntrQ(arg, &cc[0]);
             free(cc);
-        } else if ( strcmp(linie, "INSERT_LEFT") == 0 ) { // INSERT_LEFT = 6
+        } else if ( strcmp(linie, "INSERT_LEFT") == 0 ) {  // INSERT_LEFT = 6
             IntrQ(c, "6");
             char *cc = malloc(sizeof(char) * 2);
             fscanf(f, " %s", cc);
@@ -106,19 +106,19 @@ int main(void) {
         } else if ( strcmp(linie, "SWITCH") == 0 ) {
             swapCoada(c);
             swapCoada(arg);
-        } else if ( strcmp(linie, "SEARCH") == 0 ) { // SEARCH = 7
+        } else if ( strcmp(linie, "SEARCH") == 0 ) {  // SEARCH = 7
             IntrQ(c, "7");
             char *s = malloc(100 * sizeof(char));
             fscanf(f, " %s", s);
             IntrQ(arg, s);
             free(s);
-        } else if ( strcmp(linie, "SEARCH_LEFT") == 0 ) { // SEARCH_LEFT = 8
+        } else if ( strcmp(linie, "SEARCH_LEFT") == 0 ) {  // SEARCH_LEFT = 8
             IntrQ(c, "8");
             char *s = malloc(100 * sizeof(char));
             fscanf(f, " %s", s);
             IntrQ(arg, s);
             free(s);
-        } else if ( strcmp(linie, "SEARCH_RIGHT") == 0 ) { // SEARCH_RIGHT = 9
+        } else if ( strcmp(linie, "SEARCH_RIGHT") == 0 ) {  // SEARCH_RIGHT = 9
             IntrQ(c, "9");
             char *s = malloc(100 * sizeof(char));
             fscanf(f, " %s", s);

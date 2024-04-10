@@ -31,11 +31,11 @@ Tren* alocTren() {
 // Stergere tren -> valgrind
 void distrTren(Tren **x) {
     if ( !(*x)->mecanic ) return; 
-    for ( TLista aux = (*x)->santinela->urm  ; aux != (*x)->santinela ; ) {
-    TLista aux2 = aux;
-    aux = aux->urm;
-    (void) aux2;
-    free(aux2);
+    TLista aux = (*x)->santinela->urm;
+    for ( aux = (*x)->santinela->urm  ; aux != (*x)->santinela ; ) {
+        TLista aux2 = aux;
+        aux = aux->urm;
+        free(aux2);
     }
     free((*x)->santinela);
     free(*x);
@@ -144,7 +144,8 @@ void insertLeft(Tren *t, char c, FILE *out) {
 }
 
 void afisTren(Tren* t, FILE *out) {
-    for ( TLista aux = t->santinela->urm ; aux != t->santinela ; aux = aux->urm ) {
+    TLista aux = t->santinela->urm;
+    for ( aux = t->santinela->urm ; aux != t->santinela ; aux = aux->urm ) {
         if ( t->mecanic == aux ) {
             fprintf(out, "|%c|", aux->info);
         } else {

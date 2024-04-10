@@ -3,27 +3,23 @@
 #define FUNCTII_H
 #include <stdio.h>
 
-typedef struct celula
-{ 
+typedef struct celula {
   char info;
   struct celula* urm;
   struct celula *prev;
 } TCelula, *TLista;
 
-typedef struct celulaStr
-{ 
+typedef struct celulaStr {
   char *info;
   struct celulaStr* urm;
   struct celulaStr *prev;
 } TCelulaStr, *TListaStr;
 
-typedef struct coada
-{ 
+typedef struct coada {
   TListaStr sf, inc;
 } TCoada;
 
-typedef struct tren
-{
+typedef struct tren {
     TLista santinela;
     TLista mecanic;
 } Tren;
