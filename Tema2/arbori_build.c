@@ -83,6 +83,12 @@ Arb* getUrm(Arb *x) {
     return NULL;
 }
 
+void DistrNod(Arb *x) {
+    if ( x->data )
+        free(x->data);
+    free(x);
+}
+
 void compresieArb(Arb *x) {
     int i;
     // Este posibila compresia !
@@ -96,7 +102,7 @@ void compresieArb(Arb *x) {
         strcat(x->data, aux->data);
         for ( i = 0 ; i < 27 ; i++ )
             x->urm[i] = aux->urm[i];
-        free(aux->data);
+        DistrNod(aux);
     }
     for ( i = 0 ; i < 27 ; i++ ) {
         if ( x->urm[i] )

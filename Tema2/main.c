@@ -18,7 +18,7 @@ int main() {
         char *sufix = malloc(strlen(s) + 1);
         strcpy(sufix, s + i);
 
-        printf("Sufix: %s\n", sufix);
+        // printf("Sufix: %s\n", sufix);
         intrSuf(x, sufix);
         free(sufix);
     }
