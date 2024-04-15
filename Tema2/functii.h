@@ -8,9 +8,25 @@ typedef struct nod {
     struct nod* urm[27];
 } Arb;
 
-Arb* init();
+typedef struct celula {
+  Arb *info;
+  struct celula* urm;
+  struct celula *prev;
+} TCelula, *TLista;
 
-int intrSuf(Arb*, char *);
+typedef struct coada {
+  TLista sf, inc;
+} TCoada;
+
+TCoada* InitQ();
+int IntrQ(TCoada*, Arb*);
+Arb* ExtrQ(TCoada*);
+void DistrQ(TCoada**);
+
+Arb* init();
+int intrSuf(Arb*, char*);
 void parcLatime(Arb*);
+void DistrArb(Arb**);
+void compresieArb(Arb*);
 
 #endif

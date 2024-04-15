@@ -21,11 +21,11 @@ int main() {
         printf("Sufix: %s\n", sufix);
         intrSuf(x, sufix);
         free(sufix);
-        //printf("Parcurg:");
-        //parcLatime(x);
-        //printf("\n");
     }
     parcLatime(x);
+    compresieArb(x);
+    parcLatime(x);
     printf("Mda\n");
+    DistrArb(&x);
     return 0;
 }

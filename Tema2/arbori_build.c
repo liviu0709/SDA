@@ -38,19 +38,80 @@ int intrSuf(Arb *x, char *sir) {
 void parcLatime(Arb *x) {
     if ( !x )
         return;
-    int i, ok = 0;
-    for ( i = 0 ; i < 27 ; i++ ) {
-        if ( x->urm[i] ) {
-            ok = 1;
-            printf("%s ", x->urm[i]->data);
+    TCoada *noduri = InitQ();
+    IntrQ(noduri, x);
+    // Pentru delimitarea nivelelor folosim NULL
+    IntrQ(noduri, NULL);
+    while ( noduri->inc ) {
+        Arb *nodCrt = ExtrQ(noduri);
+        // Daca am gasit un alt nivel
+        if ( nodCrt == NULL ) {
+            printf("\n");
+            // Daca mai avem alte noduri in coada
+            // introducem NULL pentru delimitare...
+            if ( noduri->inc )
+                IntrQ(noduri, NULL);
+        } else {
+            // Altfel, am extras din coada un simplu nod
+            if ( nodCrt != x )
+                printf("%s ", nodCrt->data);
+            int i;
+            for ( i = 0 ; i < 27 ; i++ ) {
+                if ( nodCrt->urm[i] )
+                    IntrQ(noduri, nodCrt->urm[i]);
+            }
         }
     }
-    if ( ok )
-        printf("\n");
-    for ( i = 0 ; i < 27 ; i++ ) {
-        if ( x->urm[i] ) {
-            parcLatime(x->urm[i]);
-        }
-    }
+    DistrQ(&noduri);
 
+}
+
+int nrFii(Arb *x) {
+    int cnt = 0, i;
+    for ( i = 0 ; i < 27 ; i++ )
+        if ( x->urm[i] )
+            cnt++;
+    return cnt;
+}
+
+// Functie apelata doar la noduri cu 1 fiu
+Arb* getUrm(Arb *x) {
+    int i;
+    for ( i = 0 ; i < 27 ; i++ )
+        if ( x->urm[i] )
+            return x->urm[i];
+    return NULL;
+}
+
+void compresieArb(Arb *x) {
+    int i;
+    // Este posibila compresia !
+    while ( nrFii(x) == 1 ) {
+        Arb *aux = getUrm(x);
+        // Conform cerinta, caracterul '$' trb sa fie separat in arborele de sufixe
+        // astfel ca, nu e voie sa il compresam cu restul
+        if ( aux->data[0] == '$' )
+            break;
+        x->data = realloc(x->data, (strlen(x->data) + 2 + strlen(aux->data)) * sizeof(char) );
+        strcat(x->data, aux->data);
+        for ( i = 0 ; i < 27 ; i++ )
+            x->urm[i] = aux->urm[i];
+        free(aux->data);
+    }
+    for ( i = 0 ; i < 27 ; i++ ) {
+        if ( x->urm[i] )
+            compresieArb(x->urm[i]);
+    }
+}
+
+void DistrArb( Arb **x ) {
+    if ( *x )  {
+        int i;
+        if ( (*x)->data )
+            free((*x)->data);
+        for ( i = 0 ; i < 27 ; i++)
+            if ( (*x)->urm[i] )
+                DistrArb( &(*x)->urm[i] );
+        free(*x);
+    }
 }

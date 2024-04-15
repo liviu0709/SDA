@@ -4,7 +4,7 @@ run: build
 	./tema2
 
 build: main.c arbori_build.c
-	gcc main.c arbori_build.c $(CFLAGS) -o tema2
+	gcc main.c arbori_build.c coada.c $(CFLAGS) -o tema2
 
 clean:
 	rm -f tema2
