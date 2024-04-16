@@ -28,5 +28,9 @@ int intrSuf(Arb*, char*);
 void parcLatime(Arb*);
 void DistrArb(Arb**);
 void compresieArb(Arb*);
+int nrNoduriFrunze(Arb*);
+int nrSufixe(Arb*, int);
+int nrMaxDescendenti(Arb*);
+int cautSufArbFull(Arb*, char*);
 
 #endif

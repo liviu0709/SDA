@@ -74,6 +74,77 @@ int nrFii(Arb *x) {
     return cnt;
 }
 
+int nrNoduriFrunze(Arb *x) {
+    if ( !x )
+        return 0;
+    if ( nrFii(x) == 0 )
+        return 1;
+    else {
+        int i, cnt = 0;
+        for ( i = 0 ; i < 27 ; i++ )
+            if ( x->urm[i] )
+                cnt += nrNoduriFrunze(x->urm[i]);
+        return cnt;
+    }
+}
+
+int nrSufixe(Arb *x, int k) {
+    if ( !x )
+        return 0;
+    int cnt = 0;
+    if ( k == 1 && x->urm[0] )
+        cnt++;
+    int i;
+    for ( i = 1 ; i < 27 ; i++ )
+        if ( x->urm[i] )
+            cnt += nrSufixe(x->urm[i], k - 1);
+    return cnt;
+}
+
+int nrMaxDescendenti(Arb *x) {
+    int nrDsc = nrFii(x);
+    int i;
+    for ( i = 0 ; i < 27 ; i++ ) {
+        if ( x->urm[i] ) {
+            int nrCrt = nrMaxDescendenti(x->urm[i]);
+            if ( nrCrt > nrDsc )
+                nrDsc = nrCrt;
+        }
+    }
+    return nrDsc;
+}
+
+int cautSufix(Arb *x, char *s) {
+    if ( !x )
+        return 0;
+    if ( x->data[0] == s[0] ) {
+        if ( strlen(s) == 1 )
+            return 1;
+        int i, cnt = 0;
+        for ( i = 0 ; i < 27 ; i++ ) {
+            if ( x->urm[i] )
+                cnt += cautSufix(x->urm[i], s + 1);
+        }
+        return cnt;
+    }
+    return 0;
+
+}
+
+int cautSufArbFull(Arb *x, char *s) {
+    if ( !x )
+        return 0;
+    // Trb sa cautam un sufix care are si final
+    // nu unul care e parte din unul mai lung
+    strcat(s, "$");
+    int cnt = 0;
+    for ( int i = 0 ; i < 27 ; i++ ) {
+        if ( x->urm[i] )
+            cnt += cautSufix(x->urm[i], s);
+    }
+    return cnt;
+}
+
 // Functie apelata doar la noduri cu 1 fiu
 Arb* getUrm(Arb *x) {
     int i;

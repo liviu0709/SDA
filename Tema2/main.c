@@ -23,6 +23,16 @@ int main() {
         free(sufix);
     }
     parcLatime(x);
+    printf("Am gasit %d frunze\n", nrNoduriFrunze(x));
+    printf("Am gasit %d sufixe pt k3\n", nrSufixe(x, 3));
+    printf("Nr max mostenitori gasiti: %d\n", nrMaxDescendenti(x));
+    char *t1, *t2, *t3;
+    t1 = strdup("na");
+    t2 = strdup("ana");
+    t3 = strdup("ban");
+    printf("%s se gaseste in arb? %d\n", t1, cautSufArbFull(x, t1));
+    printf("%s se gaseste in arb? %d\n", t2, cautSufArbFull(x, t2));
+    printf("%s se gaseste in arb? %d\n", t3, cautSufArbFull(x, t3));
     compresieArb(x);
     parcLatime(x);
     printf("Mda\n");
