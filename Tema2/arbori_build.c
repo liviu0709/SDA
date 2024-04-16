@@ -35,18 +35,18 @@ int intrSuf(Arb *x, char *sir) {
     return 0;
 }
 
-void parcLatime(Arb *x) {
+void parcLatime(Arb *x, FILE *out) {
     if ( !x )
         return;
     TCoada *noduri = InitQ();
     IntrQ(noduri, x);
-    // Pentru delimitarea nivelelor folosim NULL
-    IntrQ(noduri, NULL);
+
+    // IntrQ(noduri, NULL);
     while ( noduri->inc ) {
         Arb *nodCrt = ExtrQ(noduri);
         // Daca am gasit un alt nivel
         if ( nodCrt == NULL ) {
-            printf("\n");
+            fprintf(out, "\n");
             // Daca mai avem alte noduri in coada
             // introducem NULL pentru delimitare...
             if ( noduri->inc )
@@ -54,12 +54,16 @@ void parcLatime(Arb *x) {
         } else {
             // Altfel, am extras din coada un simplu nod
             if ( nodCrt != x )
-                printf("%s ", nodCrt->data);
+                fprintf(out, "%s ", nodCrt->data);
             int i;
             for ( i = 0 ; i < 27 ; i++ ) {
                 if ( nodCrt->urm[i] )
                     IntrQ(noduri, nodCrt->urm[i]);
             }
+            // Pentru delimitarea nivelelor folosim NULL
+            // introducem primul \n dupa ce am introdus in stiva nodurile care au ca tata radacina
+            if ( nodCrt == x )
+                IntrQ(noduri, NULL);
         }
     }
     DistrQ(&noduri);

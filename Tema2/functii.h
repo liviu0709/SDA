@@ -25,7 +25,7 @@ void DistrQ(TCoada**);
 
 Arb* init();
 int intrSuf(Arb*, char*);
-void parcLatime(Arb*);
+void parcLatime(Arb*, FILE*);
 void DistrArb(Arb**);
 void compresieArb(Arb*);
 int nrNoduriFrunze(Arb*);
