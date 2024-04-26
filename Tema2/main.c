@@ -49,7 +49,8 @@ void c2(FILE *in, FILE *out, int k) {
     }
     free(s);
     fprintf(out, "%d\n", nrNoduriFrunze(x));
-    fprintf(out, "%d\n", nrSufixe(x, k));
+    // nrSufixe ia in calcul si terminatorul $
+    fprintf(out, "%d\n", nrSufixe(x, k + 1));
     fprintf(out, "%d\n", nrMaxDescendenti(x));
     DistrArb(&x);
 }
