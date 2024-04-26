@@ -96,7 +96,7 @@ int nrSufixe(Arb *x, int k) {
     if ( !x )
         return 0;
     int cnt = 0;
-    if ( k == 1 && x->urm[0] )
+    if ( k == 0 && x->urm[0] )
         cnt++;
     int i;
     for ( i = 1 ; i < 27 ; i++ )
