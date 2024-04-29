@@ -166,9 +166,9 @@ int cautSufArbFull(Arb *x, char *s) {
     // Trb sa cautam un sufix care are si final
     // nu unul care e parte din unul mai lung
     strcat(s, "$");
-    int cnt = 0;
+    int cnt = 0, i;
     // Incepem cautarea din fii nodului radacina
-    for ( int i = 0 ; i < 27 ; i++ ) {
+    for ( i = 0 ; i < 27 ; i++ ) {
         if ( x->urm[i] )
             cnt += cautSufix(x->urm[i], s);
     }
