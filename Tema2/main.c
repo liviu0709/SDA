@@ -5,16 +5,15 @@
 #include "functii.h"
 
 void procCuv(Arb *x, char *s) {
+    // Adaugam caracterul care marcheaza
+    // finalul de sir
     strcat(s, "$");
-    // printf("Sir modificat: %s\n", s);
-    // printf("Ultimul caracter: %c\n", s[strlen(s) - 1]);
     int i;
     for ( i = strlen(s) - 1 ; i >= 0 ; i-- ) {
         // Construim sufixele
         char *sufix = malloc(strlen(s) + 1);
         strcpy(sufix, s + i);
-
-        // printf("Sufix: %s\n", sufix);
+        // Introducere sufix arbored
         intrSuf(x, sufix);
         free(sufix);
     }
@@ -28,6 +27,8 @@ void c1(FILE *in, FILE *out) {
     char *s = malloc(100 * sizeof(char));
     int i;
     for ( i = 0 ; i < n ; i++ ) {
+        // Citim si introducem fiecare cuvant
+        // In arbore
         fscanf(in, "%s", s);
         procCuv(x, s);
     }
@@ -44,10 +45,14 @@ void c2(FILE *in, FILE *out, int k) {
     char *s = malloc(100 * sizeof(char));
     int i;
     for ( i = 0 ; i < n ; i++ ) {
+        // Citim si introducem fiecare cuvant
+        // In arbore
         fscanf(in, "%s", s);
         procCuv(x, s);
     }
     free(s);
+    // Apelam functiile pentru rezolvarea
+    // taskurilor cerute
     fprintf(out, "%d\n", nrNoduriFrunze(x));
     fprintf(out, "%d\n", nrSufixe(x, k));
     fprintf(out, "%d\n", nrMaxDescendenti(x));
@@ -62,11 +67,15 @@ void c3(FILE *in, FILE *out) {
     char *s = malloc(100 * sizeof(char));
     int i;
     for ( i = 0 ; i < n ; i++ ) {
+        // Citim si introducem fiecare cuvant
+        // In arbore
         fscanf(in, "%s", s);
         procCuv(x, s);
     }
     for ( i = 0 ; i < m ; i++ ) {
+        // Citim sufixele de cautat
         fscanf(in, "%s", s);
+        // Verificam daca se gasesc sau nu in arb
         fprintf(out, "%d\n", cautSufArbFull(x, s));
     }
     free(s);
@@ -81,9 +90,13 @@ void c4(FILE *in, FILE *out) {
     char *s = malloc(100 * sizeof(char));
     int i;
     for ( i = 0 ; i < n ; i++ ) {
+        // Citim si introducem fiecare cuvant
+        // In arbore
         fscanf(in, "%s", s);
         procCuv(x, s);
     }
+    // Apelam functiile pentru rezolvarea
+    // taskurilor cerute
     compresieArb(x);
     parcLatime(x, out);
     free(s);
@@ -93,6 +106,7 @@ void c4(FILE *in, FILE *out) {
 int main(int argc, char *argv[]) {
 
     int indexCerinta = 0;
+    // Citire cerinta prin arg executabil
     if ( argc > 1 ) {
         if ( strcmp(argv[1], "-c1") == 0 ) {
             indexCerinta = 1;
@@ -129,27 +143,6 @@ int main(int argc, char *argv[]) {
         default:
             break;
     }
-
-
-
-    // parcLatime(x);
-    // printf("Am gasit %d frunze\n", nrNoduriFrunze(x));
-    // printf("Am gasit %d sufixe pt k3\n", nrSufixe(x, 3));
-    // printf("Nr max mostenitori gasiti: %d\n", nrMaxDescendenti(x));
-    // char *t1 = malloc(69), *t2 = malloc(69), *t3 = malloc(69);
-    // strcpy(t1, "na");
-    // strcpy(t2, "ana");
-    // strcpy(t3, "ban");
-    // printf("%s se gaseste in arb? %d\n", t1, cautSufArbFull(x, t1));
-    // printf("%s se gaseste in arb? %d\n", t2, cautSufArbFull(x, t2));
-    // printf("%s se gaseste in arb? %d\n", t3, cautSufArbFull(x, t3));
-    // free(t1);
-    // free(t2);
-    // free(t3);
-    // compresieArb(x);
-    // parcLatime(x);
-    // printf("Mda\n");
-    // DistrArb(&x);
     fclose(in);
     fclose(out);
     return 0;
