@@ -22,4 +22,4 @@ valgrind-c3: build
 	valgrind -s --show-leak-kinds=all --leak-check=yes --track-origins=yes ./tema2 -c3 ex3.in out.out
 
 valgrind-c4: build
-	valgrind -s --show-leak-kinds=all --leak-check=yes --track-origins=yes ./tema2 -c4 ex1.in out.out 
+	valgrind -s --show-leak-kinds=all --leak-check=yes --track-origins=yes ./tema2 -c4 ex1.in out.out

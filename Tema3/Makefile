@@ -1,0 +1,19 @@
+CFLAGS=-Wall -Werror -g
+
+build: main.c
+	gcc main.c graf.c $(CFLAGS) -o tema3
+
+run: build
+	./tema3
+
+clean:
+	rm -f tema3
+
+valgrind: build
+	valgrind -s --show-leak-kinds=all --leak-check=yes --track-origins=yes ./tema3
+
+valgrind-c1: build
+	valgrind -s --show-leak-kinds=all --leak-check=yes --track-origins=yes ./tema3 1
+
+valgrind-c2: build
+	valgrind -s --show-leak-kinds=all --leak-check=yes --track-origins=yes ./tema3 2
