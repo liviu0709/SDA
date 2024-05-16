@@ -4,6 +4,56 @@
 #include <string.h>
 #include "functii.h"
 
+float medieRuta(float *uz, int n) {
+    float sum = 0;
+    for ( int i = 0 ; i < n ; i++ ) {
+        sum += uz[i];
+    }
+    return sum / n;
+}
+
+void cerinta1(TGL *g, FILE *out) {
+    char *buf = malloc(1000);
+    // Citim iar de la inceput pentru a afisa ce se cere
+    FILE *in = fopen("tema3.in", "r");
+    int nrLeg, ani, uzat;
+    fscanf(in, "%d %d %d", &nrLeg, &ani, &uzat);
+    int *index = malloc((nrLeg + 1) * sizeof(int));
+    int *nodS = calloc(sizeof(int), 1);
+    for ( int i = 1 ; i <= nrLeg ; i++ ) {
+        char *src = malloc(100);
+        char *dst = malloc(100);
+        // Citim doar primele 2 cuvinte de pe rand
+        fscanf(in, "%s %s", src, dst);
+        // Restul le ignoram pt ca nu ne trb
+        fgets(buf, 1000, in);
+        // Obtinem datele necesare din graful generat
+        AArc input = getArc(g, src, dst, nodS);
+        // Afisam ce se cere
+        fprintf(out, "%s %s %d ", g->nume[*nodS], g->nume[input->d], input->n);
+        for ( int i = 0 ; i < input->n ; i++ ) {
+            fprintf(out, "%.2f ", input->uz[i]);
+        }
+        fprintf(out, "\n");
+        // Verificam daca merita pastrata
+        if ( medieRuta(input->uz, input->n) < uzat ) {
+            index[i] = 1;
+        } else {
+            index[i] = 0;
+        }
+        free(src);
+        free(dst);
+    }
+    // Afisam rutele pastrate
+    for ( int i = 1 ; i <= nrLeg ; i++ )
+        if ( index[i] )
+            fprintf(out, "%d ", i);
+    free(index);
+    free(nodS);
+    free(buf);
+    fclose(in);
+}
+
 float uzuraMaxima(TGL *x, int nod) {
     float maxUz = 0;
     AArc l = x->x[nod];
@@ -14,19 +64,18 @@ float uzuraMaxima(TGL *x, int nod) {
     return maxUz;
 }
 
-void timpuTrece(TGL *x, int an) {
+TGL* timpuTrece(TGL *x, int an) {
+    if ( an == 0 )
+        return x;
     TGL *updated = Copy(x);
     // Flaw - modificare inplace, deci nu e bn
     // Solutie - lucram pe o copie a grafului
-    if ( an == 0 )
-        return;
 
     // Parcurgem fiecare nod
     for ( int i = 0 ; i < x->n ; i++ ) {
         // Ar putea returna propria uzura maxima cumva?
         // de rezolvat la checker !!!
         float maxUz = uzuraMaxima(x, i);
-
 
         // Update uzuri
         AArc l, lcp;
@@ -67,7 +116,7 @@ void timpuTrece(TGL *x, int an) {
     }
     DistrG(&x);
     x = updated;
-    timpuTrece(x, an - 1);
+    return timpuTrece(x, an - 1);
 }
 
 int main(int argc, char *argv[]) {
@@ -78,12 +127,16 @@ int main(int argc, char *argv[]) {
     FILE *in = fopen("tema3.in", "r");
     FILE *out = fopen("tema3.out", "w");
     if ( argv[1][0] == '1' ) {
-        printf("Task 1\n");
+        // Task 1
         int nrLeg, ani, uzat;
         fscanf(in, "%d %d %d", &nrLeg, &ani, &uzat);
+        // Generare graf
         TGL *x = CitGraf(in, nrLeg);
-        timpuTrece(x, ani);
-        AfiGrafL(x);
+        // Procesare graf
+        x = timpuTrece(x, ani);
+        // Afisare date cerute
+        cerinta1(x, out);
+        // Punctaj valgrind
         DistrG(&x);
 
     } else if ( argv[1][0] == '2' ) {

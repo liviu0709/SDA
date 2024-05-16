@@ -15,6 +15,7 @@ TGL* AlocG(int nr) /* aloca spatiu pentru descriptor graf si
   return g;
 }
 
+// Copiem un graf
 TGL* Copy(TGL *src) {
     TGL *dst = AlocG(src->n);
     for ( int i = 0 ; i < src->n ; i++ ) {
@@ -30,32 +31,37 @@ TGL* Copy(TGL *src) {
             for ( int j = 0 ; j < l->n ; j++ ) {
                 aux->uz[j] = l->uz[j];
             }
-            AArc *p = dst->x + i;
+            AArc *p;
+            p = dst->x + i;
             while (*p) p = &(*p)->urm;
             aux->urm = *p; *p = aux;
         }
     }
+    // Returnam o copie fidela
+    // Care nu are memorie comuna cu src
     return dst;
-
 }
 
 
 void DistrG(TGL** ag)
 {
-  int i;
-  AArc p, aux;
-  for(i = 1; i <= (*ag)->n; i++){
-    p = (*ag)->x[i];
-    while(p)
-    { aux = p; p = p->urm;
-        // if(aux->uz)
-        // free(aux->uz);
-      free(aux);
+    int i;
+    AArc p, aux;
+    for(i = 0; i < (*ag)->n; i++){
+        free((*ag)->nume[i]);
+        p = (*ag)->x[i];
+        while(p) {
+            aux = p; p = p->urm;
+            if(aux->uz) {
+                free(aux->uz);
+            }
+            free(aux);
+        }
     }
-  }
-  free((*ag)->x);
-  free(*ag);
-  *ag = NULL;
+    free((*ag)->x);
+    free((*ag)->nume);
+    free(*ag);
+    *ag = NULL;
 }
 
 TGL* CitGraf(FILE *in, int nrLeg)
@@ -89,7 +95,7 @@ TGL* CitGraf(FILE *in, int nrLeg)
         }
         // nu am gasit src, il aloc
         if ( s == -1 ) {
-            char *aux = malloc(sizeof(strlen(src) + 1));
+            char *aux = malloc(sizeof(strlen(src)) + 1);
             strcpy(aux, src);
             g->nume[n] = aux;
             s = n;
@@ -97,7 +103,7 @@ TGL* CitGraf(FILE *in, int nrLeg)
         }
         // nu am gasit dst, il aloc
         if ( d == -1 ) {
-            char *aux = malloc(sizeof(strlen(dst) + 1));
+            char *aux = malloc(sizeof(strlen(dst)) + 1);
             strcpy(aux, dst);
             g->nume[n] = aux;
             d = n;
@@ -141,6 +147,8 @@ TGL* CitGraf(FILE *in, int nrLeg)
     g->nume = realloc(g->nume, n * sizeof(char*));
     g->x = realloc(g->x, n * sizeof(AArc));
     g->n = n;
+    free(src);
+    free(dst);
     return g;
 }
 
@@ -159,9 +167,29 @@ void AfiGrafL(TGL * g)
         //skipp %d l->c
       printf(" %s () [", g->nume[l->d]);
       for( int i = 0 ; i < l->n ; i++ )
-        printf(" %.2lf", l->uz[i]);
+        printf(" %.2f", l->uz[i]);
     printf("]");
     }
     printf("\n");
   }
+}
+
+// Pointer arc return + index src efect lateral
+AArc getArc(TGL *g, char* src, char* dst, int *s) {
+    int d;
+    for (int i = 0; i < g->n; i++) {
+        if ( strcmp(g->nume[i], src) == 0 ) {
+            *s = i;
+        }
+        if ( strcmp(g->nume[i], dst) == 0 ) {
+            d = i;
+        }
+    }
+    AArc l = g->x[*s];
+    for ( ; l != NULL ; l = l->urm ) {
+        if ( l->d == d ) {
+            return l;
+        }
+    }
+    return NULL;
 }
