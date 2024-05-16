@@ -18,6 +18,7 @@ typedef struct
 } TGL;
 
 TGL* CitGraf(FILE*, int);  /* citeste descriere graf */
+TGL* Copy(TGL *);
 void AfiGrafL(TGL *); /* afisare liste de adiacente */
 void DistrG(TGL** ag);
 

@@ -15,6 +15,31 @@ TGL* AlocG(int nr) /* aloca spatiu pentru descriptor graf si
   return g;
 }
 
+TGL* Copy(TGL *src) {
+    TGL *dst = AlocG(src->n);
+    for ( int i = 0 ; i < src->n ; i++ ) {
+        dst->nume[i] = malloc(strlen(src->nume[i]) + 1);
+        strcpy(dst->nume[i], src->nume[i]);
+        AArc l = src->x[i];
+        for ( ; l != NULL ; l = l->urm ) {
+            AArc aux = (TCelArc*)calloc(sizeof(TCelArc),1);
+            aux->d = l->d;
+            aux->c = l->c;
+            aux->n = l->n;
+            aux->uz = (float*)malloc(l->n * sizeof(float));
+            for ( int j = 0 ; j < l->n ; j++ ) {
+                aux->uz[j] = l->uz[j];
+            }
+            AArc *p = dst->x + i;
+            while (*p) p = &(*p)->urm;
+            aux->urm = *p; *p = aux;
+        }
+    }
+    return dst;
+
+}
+
+
 void DistrG(TGL** ag)
 {
   int i;
@@ -23,6 +48,8 @@ void DistrG(TGL** ag)
     p = (*ag)->x[i];
     while(p)
     { aux = p; p = p->urm;
+        // if(aux->uz)
+        // free(aux->uz);
       free(aux);
     }
   }
@@ -85,20 +112,30 @@ TGL* CitGraf(FILE *in, int nrLeg)
         aux->urm = *p; *p = aux;
         aux->d = d; aux->n = x;
 
+        // citim info tronsoane
         aux->uz = (float*)malloc(x * sizeof(float));
         for ( int i = 0 ; i < x ; i++ ) {
             float x;
             fscanf(in, "%f", &x);
             aux->uz[i] = x;
         }
-        // p = g->x + d;
-        // while (*p) p = &(*p)->urm;
-        // aux = (TCelArc*)calloc(sizeof(TCelArc),1);
-        // if (!aux) {
-        // DistrG(&g); return NULL;
-        // }
-        // aux->urm = *p; *p = aux;
-        // aux->d = s; aux->c = x;
+        p = g->x + d;
+        while (*p) p = &(*p)->urm;
+
+        // Duplicam arcul din lista de adicenta
+        AArc aux2 = (TCelArc*)calloc(sizeof(TCelArc),1);
+        if (!aux2) {
+        DistrG(&g); return NULL;
+        }
+        aux2->urm = *p; *p = aux2;
+        aux2->d = s; aux2->n = x;
+
+        aux2->uz = (float*)malloc(x * sizeof(float));
+        // Tinem cont de ordinea tronsoanelor
+        for ( int i = 0 ; i < x ; i++ ) {
+            aux2->uz[i] = aux->uz[x - i - 1];
+        }
+
 
     }
     g->nume = realloc(g->nume, n * sizeof(char*));
@@ -118,8 +155,13 @@ void AfiGrafL(TGL * g)
       printf("%s: - ", g->nume[i]);
     else
       printf("%s: ", g->nume[i]);
-    for(; l != NULL; l = l->urm)
-      printf(" %s (%d)", g->nume[l->d], l->c);
+    for(; l != NULL; l = l->urm) {
+        //skipp %d l->c
+      printf(" %s () [", g->nume[l->d]);
+      for( int i = 0 ; i < l->n ; i++ )
+        printf(" %.2lf", l->uz[i]);
+    printf("]");
+    }
     printf("\n");
   }
 }
