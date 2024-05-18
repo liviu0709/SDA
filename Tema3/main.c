@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 #include "functii.h"
 
 float medieRuta(float *uz, int n) {
@@ -119,6 +120,128 @@ TGL* timpuTrece(TGL *x, int an) {
     return timpuTrece(x, an - 1);
 }
 
+int minimDist(int *x, int n, int *v) {
+    int minim = INT_MAX;
+    int sol;
+    for ( int i = 0 ; i < n ; i++ ) {
+        if ( x[i] < minim && v[i] == 0 ) {
+            minim = x[i];
+            sol = i;
+        }
+    }
+    return sol;
+}
+
+ArcExtras* algPrim(TGL *G, int nod) {
+    int *vizitat = calloc(G->n + 1, sizeof(int));
+    int *distanta = calloc(G->n + 1, sizeof(int));
+    AArc *arceSalvate = calloc(G->n + 1, sizeof(AArc));
+    // Punem distante infinite
+    for ( int i = 0 ; i < G->n ; i++ )
+        distanta[i] = INT_MAX;
+    int *parinti = calloc(G->n + 1, sizeof(int));
+    // Initializam datele pt nodul src
+    distanta[nod] = 0;
+    parinti[nod] = -1;
+    arceSalvate[nod] = NULL;
+    for ( int i = 0 ; i < G->n ; i++ ) {
+        int index = minimDist(distanta, G->n, vizitat);
+        vizitat[index] = 1;
+        for ( AArc l = G->x[index] ; l != NULL ; l = l->urm ) {
+            if ( vizitat[l->d] == 0 ) {
+                if ( l->c < distanta[l->d] ) {
+                    distanta[l->d] = l->c;
+                    parinti[l->d] = index;
+                    // Salvez arcul ales
+                    arceSalvate[l->d] = l;
+                }
+            }
+        }
+    }
+    // printf("\n Alg Prim");
+    // printf("\n Lista costuri: ");
+    // for ( int i = 0 ; i < G->n ; i++ )
+    //     printf("%d ", distanta[i]);
+    // printf("\n");
+    // printf("Nod src: %s\n", G->nume[nod]);
+    //     printf(" Lista parinti: ");
+    // for ( int i = 0 ; i < G->n ; i++ ) {
+    //     // printf("%d ", parinti[i]);
+    //     if ( parinti[i] >= 0 )
+    //         printf("%s ", G->nume[parinti[i]]);
+    //     else
+    //         printf("SRC ");
+    // }
+    // printf("\n");
+    // for ( int i = 0 ; i < G->n ; i++ ) {
+    //     if ( arceSalvate[i] != NULL ) {
+    //         printf("%s %s %d\n", G->nume[parinti[i]], G->nume[i], arceSalvate[i]->c);
+    //     } else {
+    //         printf("NEMA ARC\n");
+    //     }
+    // }
+    // Avem nevoie de arcele arborelui de acoperire
+    // Pentru a obtine ce se cere, pastram doar
+    // arcele cu cost cat mai mic
+    ArcExtras *data = calloc(G->n + 1, sizeof(ArcExtras));
+    for ( int i = 0 ; i < G->n ; i++ ) {
+        data[i].arcSalvat = arceSalvate[i];
+        data[i].parinte = parinti[i];
+    }
+    free(vizitat);
+    free(distanta);
+    free(parinti);
+    free(arceSalvate);
+    return data;
+}
+
+int cmpArc(const void *a, const void *b) {
+    ArcExtras* x = (ArcExtras*)a;
+    ArcExtras* y = (ArcExtras*)b;
+    if ( x->arcSalvat == NULL )
+        return 1;
+    if ( y->arcSalvat == NULL )
+        return -1;
+    return x->arcSalvat->c - y->arcSalvat->c;
+}
+
+void AfiCer2(FILE *out, TGL *x, ArcExtras *data, int nrMax) {
+    // Afisam nr cai pastrate
+    fprintf(out, "%d\n", nrMax);
+    FILE *in = fopen("tema3.in", "r");
+    // Citim iar rutele date, pentru afisarea in ordine
+    char *buf = malloc(1000);
+    // Nume sat - nu am nevoie de el
+    fgets(buf, 1000, in);
+    fgets(buf, 1000, in);
+    int n, cost;
+    fscanf(in, "%d", &n);
+    char *src = malloc(100);
+    char *dst = malloc(100);
+    for ( int i = 0 ; i < n ; i++ ) {
+        fscanf(in, "%s %s %d", src, dst, &cost);
+        int amGasit = 0;
+        for ( int j = 0 ; j < nrMax ; j++ ) {
+            // Graful nu e orientat, deci ordinea nu conteaza
+            if ( strcmp(x->nume[data[j].arcSalvat->d], dst) == 0 && strcmp(x->nume[data[j].parinte], src) == 0) {
+                amGasit = 1;
+                break;
+            }
+            if ( strcmp(x->nume[data[j].arcSalvat->d], src) == 0 && strcmp(x->nume[data[j].parinte], dst) == 0) {
+                amGasit = 1;
+                break;
+            }
+        }
+        if ( amGasit ) {
+            fprintf(out, "%s %s\n", src, dst);
+        }
+    }
+    free(src);
+    free(dst);
+    free(buf);
+    fclose(in);
+}
+
 int main(int argc, char *argv[]) {
     if ( argc == 1 ) {
         printf("Nema cerinta\n");
@@ -140,7 +263,43 @@ int main(int argc, char *argv[]) {
         DistrG(&x);
 
     } else if ( argv[1][0] == '2' ) {
-        printf("Task 2\n");
+        char *satStart = malloc(100);
+        int k, m, sat;
+        fscanf(in, "%s %d %d", satStart, &k, &m);
+        (void) m; // Kinda useless ngl
+        TGL *x = CitGraf2(in);
+        // Calculam indicele satului start
+        for ( int i = 0 ; i < x->n ; i++ ) {
+            if ( strcmp(x->nume[i], satStart) == 0 ) {
+                sat = i;
+                break;
+            }
+        }
+        printf("\n Satul start: %d\n", sat);
+        AfiGrafL2(x);
+        ArcExtras *dataRaw = algPrim(x, sat);
+        // Sortam arcele in functie de costul minim
+        qsort(dataRaw, x->n, sizeof(ArcExtras), cmpArc);
+        // Acum avem o lista sortata cu arcele care merita pastrate
+        for ( int i = 0 ; i < x->n ; i++ ) {
+            if ( dataRaw[i].arcSalvat != NULL ) {
+                printf("%s %s %d\n", x->nume[dataRaw[i].parinte], x->nume[dataRaw[i].arcSalvat->d], dataRaw[i].arcSalvat->c);
+            } else {
+                printf("NEMA ARC\n");
+            }
+        }
+
+        int caiPastrate = 0;
+        for ( int i = 0 ; i < x->n ; i++ ) {
+            if ( dataRaw[i].arcSalvat != NULL )
+                caiPastrate++;
+            if ( caiPastrate == k )
+                break;
+        }
+        AfiCer2(out, x, dataRaw, caiPastrate);
+        free(dataRaw);
+        DistrG(&x);
+        free(satStart);
     }
 
 

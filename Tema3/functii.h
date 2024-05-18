@@ -17,10 +17,20 @@ typedef struct
   char **nume; /* nume noduri */
 } TGL;
 
-TGL* CitGraf(FILE*, int);  /* citeste descriere graf */
+typedef struct
+{
+    AArc arcSalvat; /* pointer arc salvat */
+    int parinte; /* index parinte */
+} ArcExtras;
+
+
+TGL* CitGraf(FILE*, int);  /* citeste descriere graf, conform cerinta 1 */
 TGL* Copy(TGL *);
 AArc getArc(TGL *g, char* src, char* dst, int* nodS);
 void AfiGrafL(TGL *); /* afisare liste de adiacente */
 void DistrG(TGL** ag);
+
+TGL* CitGraf2(FILE*);  /* citeste descriere graf, conform cerinta 2 */
+void AfiGrafL2(TGL *);
 
 #endif

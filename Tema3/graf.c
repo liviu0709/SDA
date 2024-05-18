@@ -193,3 +193,104 @@ AArc getArc(TGL *g, char* src, char* dst, int *s) {
     }
     return NULL;
 }
+
+
+
+
+// Cod cerinta 2, de splituit in alt file cand am chef!
+
+TGL* CitGraf2(FILE *in)
+{
+
+    TGL* g = NULL;
+    int s, d;
+    int x;
+    AArc *p, aux;
+    int n = 0;
+    char *src = malloc(100);
+    char *dst = malloc(100);
+
+
+
+
+    g = AlocG(1000); // nu stim cate noduri are graful
+    // aflam dupa ce citim tot
+    if (!g) return 0;
+    while (fscanf(in, "%s %s %d", src, dst, &x) == 3)
+    {
+        s = d = -1;
+        // Caut src si dst in vectorul de nume
+        for (int i = 0; i < n; i++) {
+            if ( strcmp(g->nume[i], src) == 0 ) {
+                s = i;
+            }
+            if ( strcmp(g->nume[i], dst) == 0 ) {
+                d = i;
+            }
+        }
+        // nu am gasit src, il aloc
+        if ( s == -1 ) {
+            char *aux = malloc(sizeof(strlen(src)) + 1);
+            strcpy(aux, src);
+            g->nume[n] = aux;
+            s = n;
+            n++;
+        }
+        // nu am gasit dst, il aloc
+        if ( d == -1 ) {
+            char *aux = malloc(sizeof(strlen(dst)) + 1);
+            strcpy(aux, dst);
+            g->nume[n] = aux;
+            d = n;
+            n++;
+        }
+        p = g->x + s;
+        while (*p) p = &(*p)->urm;
+        aux = (TCelArc*)calloc(sizeof(TCelArc),1);
+        if (!aux) {
+        DistrG(&g); return NULL;
+        }
+        aux->urm = *p; *p = aux;
+        aux->d = d; aux->c = x;
+
+        // Duplicam arcul din lista de adicenta
+        p = g->x + d;
+        while (*p) p = &(*p)->urm;
+        AArc aux2 = (TCelArc*)calloc(sizeof(TCelArc),1);
+        if (!aux2) {
+        DistrG(&g); return NULL;
+        }
+        aux2->urm = *p; *p = aux2;
+        aux2->d = s; aux2->c = x;
+
+
+
+
+    }
+    g->nume = realloc(g->nume, n * sizeof(char*));
+    g->x = realloc(g->x, n * sizeof(AArc));
+    g->n = n;
+    free(src);
+    free(dst);
+    return g;
+}
+
+void AfiGrafL2(TGL * g)
+{
+  AArc l;
+  int i;
+
+  for(i = 0; i < g->n; i++){
+    l = g->x[i];
+    if(!l)
+      printf("%s: - ", g->nume[i]);
+    else
+      printf("%s: ", g->nume[i]);
+    for(; l != NULL; l = l->urm) {
+        //skipp %d l->c
+      printf(" %s (%d) ||", g->nume[l->d], l->c);
+
+    }
+    printf("\n");
+  }
+}
