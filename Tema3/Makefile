@@ -1,7 +1,7 @@
 CFLAGS=-Wall -Werror -g
 
 build: main.c
-	gcc main.c graf.c $(CFLAGS) -o tema3
+	gcc main.c graf.c cerinta1.c cerinta2.c $(CFLAGS) -o tema3
 
 run: build
 	./tema3

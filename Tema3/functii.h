@@ -24,14 +24,17 @@ typedef struct
     int costDrum; /* cost drum */
 } ArcExtras;
 
-
 TGL* CitGraf(FILE*, int);  /* citeste descriere graf, conform cerinta 1 */
-TGL* Copy(TGL *);
-AArc getArc(TGL *g, char* src, char* dst, int* nodS);
-void AfiGrafL(TGL *); /* afisare liste de adiacente */
-void DistrG(TGL** ag);
-
+void DistrG(TGL** ag); /* distruge graf -> punctaj valgrind */
+TGL* AlocG(int nr); /* aloca memorie pentru un graf */
 TGL* CitGraf2(FILE*);  /* citeste descriere graf, conform cerinta 2 */
-void AfiGrafL2(TGL *);
+
+// Cerinta 1
+TGL* timpuTrece(TGL *x, int an);
+void cerinta1(TGL *g, FILE *out);
+
+// Cerinta 2
+void AfiCer2(FILE *out, TGL *x, ArcExtras *data, int nrMax);
+ArcExtras* algDijkstra(TGL *G, int nod);
 
 #endif
