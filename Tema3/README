@@ -1,0 +1,27 @@
+Tema 3 - SDA
+
+Nota:
+- functiile din graf.c au fost preluate din laborator si au fost modificate pentru a citi informatiile necesare
+- alg Dijkstra a fost preluat din laborator si a fost modificat pentru a returna un vector de distante
+
+Cerinta 1:
+- citim un graf neorientat, il memoram folosind liste de adiacenta
+- pentru a il considera neorientat, dublam fiecare arc
+- cand dublam un arc, inversam si ordinea tronsoanelor(evident)
+- pentru a afla starea sinelor peste x ani, modificam graful de la an la an
+- folosim o functie recursiva, care afla starea sinelor peste un an, pornind de la starea actuala
+- pentru a face acest lucru posibil, copiem graful initial si aplicam modificarile pe cel copiat
+- la final, returnam graful modificat
+- pentru a afisa rutele care merita pastrare... citim datele de intrare iar
+(ordinea de afisare a arcelor conteaza, de aceea citim iar datele)
+- pentru fiecare arc din input, verificam daca merita pastrat (conform graf modificat)
+- daca merita pastrat, afisam arcul si ii marcam indexul intr-un vector cu 1
+(pentru afisarea finala a indicilor care merita pastrati)
+
+Cerinta 2:
+- citim graful neorientat si il memoram folosind liste de adiacenta
+- pentru a aflat costul minim intre un nod si restul, folosim algoritmul lui Dijkstra
+- modificam algoritmul pentru a returna un vector de arce, parinti si costuri
+- sortam vectorul in functie de costuri
+- afisam primele k arce, daca exista
+- pentru a face afisarea in ordine, procedam in mod analog cu cerinta 1
