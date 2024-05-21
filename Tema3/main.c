@@ -83,7 +83,7 @@ TGL* timpuTrece(TGL *x, int an) {
         for ( l = x->x[i], lcp = updated->x[i] ; l != NULL ; l = l->urm, lcp = lcp->urm) {
             for ( int j = 0 ; j < l->n ; j++ ) {
                 // Daca tronsonul nu e uzat
-                if ( l->uz[j] == 0 ) {
+                if ( l->uz[j] == 0 && l->n != 1 ) {
                     // Tinem cont daca e la inceput de ruta
                     if ( j == 0 ) {
                         if ( maxUz > l->uz[j + 1] )
@@ -106,8 +106,16 @@ TGL* timpuTrece(TGL *x, int an) {
                             lcp->uz[j] = l->uz[j + 1] / 2;
                         }
                     }
+
                 } else {
-                    lcp->uz[j] *= 2;
+                    if ( l->n == 1 && l->uz[j] == 0) {
+                        float uzDst = uzuraMaxima(x, l->d);
+                        if ( maxUz > uzDst)
+                            lcp->uz[j] = maxUz / 2;
+                        else
+                            lcp->uz[j] = uzDst / 2;
+                    } else
+                        lcp->uz[j] *= 2;
                 }
                 if ( lcp->uz[j] > 100 )
                     lcp->uz[j] = 100;
@@ -132,7 +140,7 @@ int minimDist(int *x, int n, int *v) {
     return sol;
 }
 
-ArcExtras* algPrim(TGL *G, int nod) {
+ArcExtras* algDijkstra(TGL *G, int nod) {
     int *vizitat = calloc(G->n + 1, sizeof(int));
     int *distanta = calloc(G->n + 1, sizeof(int));
     AArc *arceSalvate = calloc(G->n + 1, sizeof(AArc));
@@ -149,8 +157,9 @@ ArcExtras* algPrim(TGL *G, int nod) {
         vizitat[index] = 1;
         for ( AArc l = G->x[index] ; l != NULL ; l = l->urm ) {
             if ( vizitat[l->d] == 0 ) {
-                if ( l->c < distanta[l->d] ) {
-                    distanta[l->d] = l->c;
+                // Trecem la djisktra?
+                if ( l->c + distanta[index] < distanta[l->d] ) {
+                    distanta[l->d] = l->c + distanta[index];
                     parinti[l->d] = index;
                     // Salvez arcul ales
                     arceSalvate[l->d] = l;
@@ -158,28 +167,36 @@ ArcExtras* algPrim(TGL *G, int nod) {
             }
         }
     }
-    // printf("\n Alg Prim");
-    // printf("\n Lista costuri: ");
-    // for ( int i = 0 ; i < G->n ; i++ )
-    //     printf("%d ", distanta[i]);
-    // printf("\n");
-    // printf("Nod src: %s\n", G->nume[nod]);
-    //     printf(" Lista parinti: ");
-    // for ( int i = 0 ; i < G->n ; i++ ) {
-    //     // printf("%d ", parinti[i]);
-    //     if ( parinti[i] >= 0 )
-    //         printf("%s ", G->nume[parinti[i]]);
-    //     else
-    //         printf("SRC ");
-    // }
-    // printf("\n");
-    // for ( int i = 0 ; i < G->n ; i++ ) {
-    //     if ( arceSalvate[i] != NULL ) {
-    //         printf("%s %s %d\n", G->nume[parinti[i]], G->nume[i], arceSalvate[i]->c);
-    //     } else {
-    //         printf("NEMA ARC\n");
-    //     }
-    // }
+    printf("\n Alg Prim");
+    printf("\n Lista costuri: ");
+    for ( int i = 0 ; i < G->n ; i++ )
+        printf("[%d - %s]", distanta[i], G->nume[i]);
+    printf("\n");
+    printf("Nod src: %s\n", G->nume[nod]);
+        printf(" Lista parinti: ");
+    for ( int i = 0 ; i < G->n ; i++ ) {
+        // printf("%d ", parinti[i]);
+        if ( parinti[i] >= 0 )
+            printf("%s ", G->nume[parinti[i]]);
+        else
+            printf("SRC ");
+    }
+    printf("\n");
+    for ( int i = 0 ; i < G->n ; i++ ) {
+        // printf("%d ", parinti[i]);
+        if ( parinti[i] >= 0 )
+            printf("%d ", parinti[i]);
+        else
+            printf("SRC ");
+    }
+    printf("\n");
+    for ( int i = 0 ; i < G->n ; i++ ) {
+        if ( arceSalvate[i] != NULL ) {
+            printf("%s %s %d\n", G->nume[parinti[i]], G->nume[i], arceSalvate[i]->c);
+        } else {
+            printf("NEMA ARC\n");
+        }
+    }
     // Avem nevoie de arcele arborelui de acoperire
     // Pentru a obtine ce se cere, pastram doar
     // arcele cu cost cat mai mic
@@ -187,6 +204,7 @@ ArcExtras* algPrim(TGL *G, int nod) {
     for ( int i = 0 ; i < G->n ; i++ ) {
         data[i].arcSalvat = arceSalvate[i];
         data[i].parinte = parinti[i];
+        data[i].costDrum = distanta[i];
     }
     free(vizitat);
     free(distanta);
@@ -202,7 +220,7 @@ int cmpArc(const void *a, const void *b) {
         return 1;
     if ( y->arcSalvat == NULL )
         return -1;
-    return x->arcSalvat->c - y->arcSalvat->c;
+    return x->costDrum - y->costDrum;
 }
 
 void AfiCer2(FILE *out, TGL *x, ArcExtras *data, int nrMax) {
@@ -216,28 +234,33 @@ void AfiCer2(FILE *out, TGL *x, ArcExtras *data, int nrMax) {
     fgets(buf, 1000, in);
     int n, cost;
     fscanf(in, "%d", &n);
-    char *src = malloc(100);
-    char *dst = malloc(100);
     for ( int i = 0 ; i < n ; i++ ) {
+        char *src = malloc(100);
+        char *dst = malloc(100);
         fscanf(in, "%s %s %d", src, dst, &cost);
         int amGasit = 0;
         for ( int j = 0 ; j < nrMax ; j++ ) {
             // Graful nu e orientat, deci ordinea nu conteaza
             if ( strcmp(x->nume[data[j].arcSalvat->d], dst) == 0 && strcmp(x->nume[data[j].parinte], src) == 0) {
+                printf("Am gasit %s %s\n", x->nume[data[j].arcSalvat->d], x->nume[data[j].parinte]);
+                printf("Afisez %s %s\n", src, dst);
                 amGasit = 1;
                 break;
             }
             if ( strcmp(x->nume[data[j].arcSalvat->d], src) == 0 && strcmp(x->nume[data[j].parinte], dst) == 0) {
+                printf("Am gasit %s %s\n", x->nume[data[j].arcSalvat->d], x->nume[data[j].parinte]);
+                printf("Afisez %s %s\n", dst, src);
                 amGasit = 1;
                 break;
             }
         }
         if ( amGasit ) {
             fprintf(out, "%s %s\n", src, dst);
+            printf("S-a incercatt %s %s\n", src, dst);
         }
+        free(src);
+        free(dst);
     }
-    free(src);
-    free(dst);
     free(buf);
     fclose(in);
 }
@@ -277,13 +300,14 @@ int main(int argc, char *argv[]) {
         }
         printf("\n Satul start: %d\n", sat);
         AfiGrafL2(x);
-        ArcExtras *dataRaw = algPrim(x, sat);
+        ArcExtras *dataRaw = algDijkstra(x, sat);
         // Sortam arcele in functie de costul minim
         qsort(dataRaw, x->n, sizeof(ArcExtras), cmpArc);
         // Acum avem o lista sortata cu arcele care merita pastrate
+        printf("Afis lista sortata\n");
         for ( int i = 0 ; i < x->n ; i++ ) {
             if ( dataRaw[i].arcSalvat != NULL ) {
-                printf("%s %s %d\n", x->nume[dataRaw[i].parinte], x->nume[dataRaw[i].arcSalvat->d], dataRaw[i].arcSalvat->c);
+                printf("%s %s %d\n", x->nume[dataRaw[i].parinte], x->nume[dataRaw[i].arcSalvat->d], dataRaw[i].costDrum);
             } else {
                 printf("NEMA ARC\n");
             }

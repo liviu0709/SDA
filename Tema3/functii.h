@@ -21,6 +21,7 @@ typedef struct
 {
     AArc arcSalvat; /* pointer arc salvat */
     int parinte; /* index parinte */
+    int costDrum; /* cost drum */
 } ArcExtras;
 
 

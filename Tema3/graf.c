@@ -95,7 +95,7 @@ TGL* CitGraf(FILE *in, int nrLeg)
         }
         // nu am gasit src, il aloc
         if ( s == -1 ) {
-            char *aux = malloc(sizeof(strlen(src)) + 1);
+            char *aux = malloc(strlen(src) + 1);
             strcpy(aux, src);
             g->nume[n] = aux;
             s = n;
@@ -103,7 +103,7 @@ TGL* CitGraf(FILE *in, int nrLeg)
         }
         // nu am gasit dst, il aloc
         if ( d == -1 ) {
-            char *aux = malloc(sizeof(strlen(dst)) + 1);
+            char *aux = malloc(strlen(dst) + 1);
             strcpy(aux, dst);
             g->nume[n] = aux;
             d = n;
@@ -230,7 +230,7 @@ TGL* CitGraf2(FILE *in)
         }
         // nu am gasit src, il aloc
         if ( s == -1 ) {
-            char *aux = malloc(sizeof(strlen(src)) + 1);
+            char *aux = malloc(strlen(src) + 1);
             strcpy(aux, src);
             g->nume[n] = aux;
             s = n;
@@ -238,7 +238,7 @@ TGL* CitGraf2(FILE *in)
         }
         // nu am gasit dst, il aloc
         if ( d == -1 ) {
-            char *aux = malloc(sizeof(strlen(dst)) + 1);
+            char *aux = malloc(strlen(dst) + 1);
             strcpy(aux, dst);
             g->nume[n] = aux;
             d = n;
