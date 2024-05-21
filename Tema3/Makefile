@@ -6,6 +6,9 @@ build: main.c
 run: build
 	./tema3
 
+run-c2: build
+	./tema3 2
+
 clean:
 	rm -f tema3
 
